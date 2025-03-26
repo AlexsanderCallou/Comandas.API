@@ -13,8 +13,6 @@ namespace Comandas.API.Models{
         public  int NumeroMesa { get; set; } 
         public int SituacaoMesa { get; set; }
 
-
-
     }
 
 }
