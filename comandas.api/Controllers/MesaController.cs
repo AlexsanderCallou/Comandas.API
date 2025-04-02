@@ -39,7 +39,7 @@ namespace Comandas.API.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [SwaggerResponse(204,"Altera a situação de uma mesa")]
         [SwaggerResponse(400,"Id da mesa informada não é o mesmo do corpo")]
         public ActionResult<MesaPutDTO> PutMesa(int id, MesaPutDTO mesaPutDTO){
@@ -54,7 +54,7 @@ namespace Comandas.API.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [SwaggerResponse(204,"Exclui uma mesa")]
         public ActionResult DeleteMesa(int id){
             return NoContent();

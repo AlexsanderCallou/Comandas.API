@@ -19,6 +19,10 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 
+//continuar a aula a partir da aqui, na criação do escopo.
+using(var escopo = app.Services.CreateScope())
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
