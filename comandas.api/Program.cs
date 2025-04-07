@@ -20,7 +20,12 @@ var app = builder.Build();
 
 
 //continuar a aula a partir da aqui, na criação do escopo.
-using(var escopo = app.Services.CreateScope())
+using(var escopo = app.Services.CreateScope()){
+
+    var contexto = escopo.ServiceProvider.GetRequiredService<ComandasDBContext>();
+    await contexto.Database.MigrateAsync();
+
+}
 
 
 if (app.Environment.IsDevelopment())
