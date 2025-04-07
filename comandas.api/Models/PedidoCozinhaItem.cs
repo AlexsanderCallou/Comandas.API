@@ -14,16 +14,16 @@ namespace Comandas.API.Models {
         public int PedidoCozinhaId {get;set;}
 
 
-        public virtual PedidoCozinha PedidoCozinha {get;set;}
+        public virtual PedidoCozinha PedidoCozinha {get;set;} = default!;
 
 
         public int ComanadaItemId {get; set;}
 
         
-        public virtual ComandaItem ComandaItem {get;set;}
+        public virtual ComandaItem ComandaItem {get;set;} = default!;
 
 
-        
+        //teste
 
 
 

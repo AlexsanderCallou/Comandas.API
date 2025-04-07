@@ -15,7 +15,7 @@ namespace  Comandas.API.Models {
 
         public int ComandaId {get;set;}
 
-        public virtual Comanda Comanda {get;set;}
+        public virtual Comanda Comanda {get;set;}  
 
     }
     

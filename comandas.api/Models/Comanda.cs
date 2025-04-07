@@ -19,7 +19,7 @@ namespace Comandas.API.Models {
         public int SituacaoComanda { get; set; } = 1;
 
         
-        public virtual ICollection<ComandaItem> ComandaItems {get;set;}
+        public virtual ICollection<ComandaItem> ComandaItems {get;set;} = default!;
 
 
 

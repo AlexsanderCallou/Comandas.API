@@ -5,8 +5,7 @@ namespace Comandas.API.DTOs {
         public int NumeroMesa { get; set; }
         public int SituacaoMesa { get; set; }
 
-
     }
 
-
 }
+
