@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Comandas.API.DataBase;
 using Comandas.API.DTOs;
 using Comandas.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Comandas.API.Controllers{
@@ -9,7 +11,18 @@ namespace Comandas.API.Controllers{
     [Route("api/[controller]")]
     [ApiController]
     public class CardapioItemController:ControllerBase{
-        
+
+
+        public readonly ComandasDBContext _banco;
+
+        public CardapioItemController(ComandasDBContext comandasDBContext)
+        {
+            _banco = comandasDBContext;
+        }
+
+
+
+
         [HttpGet("{id}")]
         [SwaggerResponse(200,"Retorna o item do cardapio",typeof(CardapioItemGetDTO))]
         public ActionResult<CardapioItemGetDTO> GetCardapioItem(int id){

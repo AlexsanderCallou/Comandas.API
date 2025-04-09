@@ -15,7 +15,7 @@ namespace Comandas.API.Models.Configuration {
 
             builder.Property(m => m.NumeroMesa)
             .IsRequired()
-            .HasColumnName("NU_MESA");
+            .HasColumnName("NUM_MESA");
 
             builder.Property(m => m.SituacaoMesa)
             .IsRequired()

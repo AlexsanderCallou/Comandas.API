@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetConnectionString("Default");
 
 //Adicionar o contexto do banco de dados a piperline do app
-builder.Services.AddDbContext<ComandasDBContext>(config => {
+builder.Services.AddDbContextPool<ComandasDBContext>(config => {
     config.UseNpgsql(connection);
+    
 });
 
 builder.Services.AddControllers();
@@ -24,6 +25,7 @@ using(var escopo = app.Services.CreateScope()){
 
     var contexto = escopo.ServiceProvider.GetRequiredService<ComandasDBContext>();
     await contexto.Database.MigrateAsync();
+    InicializarDados.Semear(contexto);
 
 }
 

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Comandas.API.DTOs;
 using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
+using Comandas.API.DataBase;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Comandas.API.Controllers
@@ -12,21 +14,40 @@ namespace Comandas.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class MesaController:ControllerBase{
-            
+
+        public readonly ComandasDBContext _banco;
+
+        public MesaController(ComandasDBContext comandasDBContext)
+        {
+            _banco = comandasDBContext;
+        }
+
+
+
         [HttpGet("{id}")]
         [SwaggerResponse(200,"Retorna uma mesa", typeof(MesaGetDTO))]
-        public ActionResult<MesaGetDTO> GetMesa(int id) {
+        public async Task<ActionResult<MesaGetDTO>> GetMesa(int id) {
             
-            return Ok(new MesaGetDTO(){Id = 1, NumeroMesa = 1, SituacaoMesa = 1});    
+            var mesa = await _banco.Mesas.FirstAsync(m => m.Id == id);
+
+            return Ok(new MesaGetDTO(){Id = mesa.Id, NumeroMesa = mesa.NumeroMesa, SituacaoMesa = mesa.SituacaoMesa});    
         
         }
         
         [HttpGet]
         [SwaggerResponse(200,"Retorna uma lista de mesas.",typeof(IEnumerable<MesaGetDTO>))]
-        public ActionResult<IEnumerable<MesaGetDTO>> GetMesas(){
-            return Ok(new List<MesaGetDTO>(){new MesaGetDTO(){Id = 1, NumeroMesa = 1, SituacaoMesa = 2}
-                                            ,new MesaGetDTO(){Id = 2, NumeroMesa = 2, SituacaoMesa = 2}
-                                            });
+        public async Task<ActionResult<IEnumerable<MesaGetDTO>>> GetMesas(){
+            
+            var mesas = await _banco.Mesas.ToListAsync();
+
+
+            return Ok( mesas.Select(m => new MesaGetDTO{
+                                            Id = m.Id, 
+                                            NumeroMesa = m.NumeroMesa, 
+                                            SituacaoMesa = m.SituacaoMesa
+                                            }
+                                    )
+                    );
         }
 
         [HttpPost]
