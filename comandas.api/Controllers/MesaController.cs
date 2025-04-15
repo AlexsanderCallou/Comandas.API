@@ -7,6 +7,7 @@ using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
 using Comandas.API.DataBase;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 
 namespace Comandas.API.Controllers
@@ -27,8 +28,8 @@ namespace Comandas.API.Controllers
         [HttpGet("{id}")]
         [SwaggerResponse(200,"Retorna uma mesa", typeof(MesaGetDTO))]
         public async Task<ActionResult<MesaGetDTO>> GetMesa(int id) {
-            
-            var mesa = await _banco.Mesas.FirstAsync(m => m.Id == id);
+          
+            var mesa = await _banco.Mesas.AsNoTracking().FirstAsync(m => m.Id == id);
 
             return Ok(new MesaGetDTO(){Id = mesa.Id, NumeroMesa = mesa.NumeroMesa, SituacaoMesa = mesa.SituacaoMesa});    
         
@@ -38,8 +39,7 @@ namespace Comandas.API.Controllers
         [SwaggerResponse(200,"Retorna uma lista de mesas.",typeof(IEnumerable<MesaGetDTO>))]
         public async Task<ActionResult<IEnumerable<MesaGetDTO>>> GetMesas(){
             
-            var mesas = await _banco.Mesas.ToListAsync();
-
+            var mesas = await _banco.Mesas.AsNoTracking().ToListAsync();
 
             return Ok( mesas.Select(m => new MesaGetDTO{
                                             Id = m.Id, 
@@ -51,33 +51,60 @@ namespace Comandas.API.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(201,"Edita uma mesa", typeof(MesaPostDTO))]
-        public ActionResult<MesaPostDTO> PostMesa(MesaPostDTO mesaPostDTO){
+        [SwaggerResponse(201,"Cria uma mesa", typeof(MesaPostDTO))]
+        public async Task<ActionResult<MesaPostDTO>> PostMesa(MesaPostDTO mesaPostDTO){
             
-            var Mesa = new MesaPostDTO();
+            var mesa = new Mesa(){
+                NumeroMesa = mesaPostDTO.NumeroMesa,
+                SituacaoMesa = mesaPostDTO.SituacaoMesa
+            };
 
-            return CreatedAtAction("GetMesa",new{id=1},Mesa);
+            _banco.Mesas.Add(mesa);
+
+            await _banco.SaveChangesAsync();
+
+            return CreatedAtAction("GetMesa",new{id=mesa.Id},mesa);
 
         }
 
         [HttpPut("{id}")]
-        [SwaggerResponse(204,"Altera a situação de uma mesa")]
+        [SwaggerResponse(204,"Altera uma mesa")]
         [SwaggerResponse(400,"Id da mesa informada não é o mesmo do corpo")]
-        public ActionResult<MesaPutDTO> PutMesa(int id, MesaPutDTO mesaPutDTO){
+        public async Task<ActionResult<MesaPutDTO>> PutMesa(int id, MesaPutDTO mesaPutDTO){
             
             if(id != mesaPutDTO.Id){
                 return BadRequest();
             }
 
-            mesaPutDTO.SituacaoMesa = 2;
+            var mesa = await _banco.Mesas.FirstOrDefaultAsync(m => m.Id == id);
 
+            if(mesa is null){
+                return NotFound("Mesa não encontrada.");
+            }
+
+            mesa.NumeroMesa = mesaPutDTO.NumeroMesa;
+            mesa.SituacaoMesa = mesaPutDTO.SituacaoMesa;
+
+            await _banco.SaveChangesAsync();
+            
             return NoContent();
 
         }
 
         [HttpDelete("{id}")]
         [SwaggerResponse(204,"Exclui uma mesa")]
-        public ActionResult DeleteMesa(int id){
+        public async Task<ActionResult> DeleteMesa(int id){
+
+            var mesa = await _banco.Mesas.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (mesa is null){
+                return NotFound("Mesa não encontrada");
+            }
+
+            _banco.Mesas.Remove(mesa);
+
+            await _banco.SaveChangesAsync();
+
             return NoContent();
         }
 

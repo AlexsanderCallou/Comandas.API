@@ -10,7 +10,7 @@ var connection = builder.Configuration.GetConnectionString("Default");
 //Adicionar o contexto do banco de dados a piperline do app
 builder.Services.AddDbContextPool<ComandasDBContext>(config => {
     config.UseNpgsql(connection);
-    
+    config.EnableSensitiveDataLogging();
 });
 
 builder.Services.AddControllers();
