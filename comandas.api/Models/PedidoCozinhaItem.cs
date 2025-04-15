@@ -22,12 +22,5 @@ namespace Comandas.API.Models {
         
         public virtual ComandaItem ComandaItem {get;set;} = default!;
 
-
-        //teste
-
-
-
     }
-
-
 }

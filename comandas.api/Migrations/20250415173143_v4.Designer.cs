@@ -2,6 +2,7 @@
 using Comandas.API.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,13 +11,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace comandas.api.Migrations
 {
     [DbContext(typeof(ComandasDBContext))]
-    partial class ComandasDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250415173143_v4")]
+    partial class v4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -27,31 +29,31 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("tx_descricao");
+                        .HasColumnName("TX_DESCRICAO");
 
                     b.Property<bool>("PossuiPreparo")
                         .HasColumnType("boolean")
-                        .HasColumnName("ic_preparo");
+                        .HasColumnName("IC_PREPARO");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("numeric")
-                        .HasColumnName("vl_preco");
+                        .HasColumnName("VL_PRECO");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("no_item");
+                        .HasColumnName("NO_ITEM");
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_cardapio_item", "dbo");
+                    b.ToTable("TB_CARDAPIO_ITEM", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
@@ -59,26 +61,26 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("NomeCliente")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("no_cliente");
+                        .HasColumnName("NO_CLIENTE");
 
                     b.Property<int>("NumeroMesa")
                         .HasColumnType("integer")
-                        .HasColumnName("nu_mesa");
+                        .HasColumnName("NU_MESA");
 
                     b.Property<int>("SituacaoComanda")
                         .HasColumnType("integer")
-                        .HasColumnName("ic_situacao");
+                        .HasColumnName("IC_SITUACAO");
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_comanda", "dbo");
+                    b.ToTable("TB_COMANDA", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
@@ -86,17 +88,17 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CardapioItemId")
                         .HasColumnType("integer")
-                        .HasColumnName("id_cardapio_item");
+                        .HasColumnName("ID_CARDAPIO_ITEM");
 
                     b.Property<int>("ComandaId")
                         .HasColumnType("integer")
-                        .HasColumnName("id_comanda");
+                        .HasColumnName("ID_COMANDA");
 
                     b.HasKey("Id");
 
@@ -104,7 +106,7 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_comanda_item", "dbo");
+                    b.ToTable("TB_COMANDA_ITEM", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Mesa", b =>
@@ -112,21 +114,21 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("NumeroMesa")
                         .HasColumnType("integer")
-                        .HasColumnName("nu_mesa");
+                        .HasColumnName("NUM_MESA");
 
                     b.Property<int>("SituacaoMesa")
                         .HasColumnType("integer")
-                        .HasColumnName("ic_situacao");
+                        .HasColumnName("IC_SITUACAO");
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_mesa", "dbo");
+                    b.ToTable("TB_MESA", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
@@ -134,23 +136,23 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComandaId")
                         .HasColumnType("integer")
-                        .HasColumnName("id_comanda");
+                        .HasColumnName("ID_COMANDA");
 
                     b.Property<int>("SituacaoId")
                         .HasColumnType("integer")
-                        .HasColumnName("ic_situacao");
+                        .HasColumnName("IC_SITUACAO");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_pedido_cozinha", "dbo");
+                    b.ToTable("TB_PEDIDO_COZINHA", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
@@ -158,17 +160,17 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComanadaItemId")
                         .HasColumnType("integer")
-                        .HasColumnName("id_comanda_item");
+                        .HasColumnName("ID_COMANDA_ITEM");
 
                     b.Property<int>("PedidoCozinhaId")
                         .HasColumnType("integer")
-                        .HasColumnName("id_pedido_cozinha");
+                        .HasColumnName("ID_PEDIDO_COZINHA");
 
                     b.HasKey("Id");
 
@@ -176,7 +178,7 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("PedidoCozinhaId");
 
-                    b.ToTable("tb_pedido_cozinha_item", "dbo");
+                    b.ToTable("TB_PEDIDO_COZINHA_ITEM", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Usuario", b =>
@@ -184,28 +186,28 @@ namespace comandas.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("tx_email");
+                        .HasColumnName("TX_EMAIL");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("no_ususario");
+                        .HasColumnName("NO_USUARIO");
 
                     b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("tx_senha");
+                        .HasColumnName("TX_SENHA");
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_usuario", "dbo");
+                    b.ToTable("TB_USUARIO", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>

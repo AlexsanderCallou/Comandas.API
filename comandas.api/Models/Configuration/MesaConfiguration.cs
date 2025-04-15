@@ -7,19 +7,19 @@ namespace Comandas.API.Models.Configuration {
     {
         public void Configure(EntityTypeBuilder<Mesa> builder)
         {
-            builder.ToTable("TB_MESA");
+            builder.ToTable("tb_mesa");
             
             builder.Property(m => m.Id)
             .IsRequired()
-            .HasColumnName("ID");
+            .HasColumnName("id");
 
             builder.Property(m => m.NumeroMesa)
             .IsRequired()
-            .HasColumnName("NUM_MESA");
+            .HasColumnName("nu_mesa");
 
             builder.Property(m => m.SituacaoMesa)
             .IsRequired()
-            .HasColumnName("IC_SITUACAO");
+            .HasColumnName("ic_situacao");
                        
         }
     }

@@ -2,6 +2,7 @@
 using Comandas.API.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,13 +11,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace comandas.api.Migrations
 {
     [DbContext(typeof(ComandasDBContext))]
-    partial class ComandasDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250415180718_v7")]
+    partial class v7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -51,7 +53,7 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_cardapio_item", "dbo");
+                    b.ToTable("tb_cardapio_item", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
@@ -78,7 +80,7 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_comanda", "dbo");
+                    b.ToTable("tb_comanda", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
@@ -104,7 +106,7 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_comanda_item", "dbo");
+                    b.ToTable("tb_comanda_item", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Mesa", b =>
@@ -126,7 +128,7 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_mesa", "dbo");
+                    b.ToTable("tb_mesa", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
@@ -150,7 +152,7 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_pedido_cozinha", "dbo");
+                    b.ToTable("tb_pedido_cozinha", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
@@ -176,7 +178,7 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("PedidoCozinhaId");
 
-                    b.ToTable("tb_pedido_cozinha_item", "dbo");
+                    b.ToTable("tb_pedido_cozinha_item", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.Usuario", b =>
@@ -205,7 +207,7 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_usuario", "dbo");
+                    b.ToTable("tb_usuario", (string)null);
                 });
 
             modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
