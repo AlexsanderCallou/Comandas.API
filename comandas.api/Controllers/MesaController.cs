@@ -18,8 +18,7 @@ namespace Comandas.API.Controllers
 
         public readonly ComandasDBContext _banco;
 
-        public MesaController(ComandasDBContext comandasDBContext)
-        {
+        public MesaController(ComandasDBContext comandasDBContext){
             _banco = comandasDBContext;
         }
 
