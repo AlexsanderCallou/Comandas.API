@@ -20,7 +20,7 @@ namespace Comandas.API.DataBase{
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.HasDefaultSchema("dbo"); //ver com o professor se essa é a forma correta.
+            modelBuilder.HasDefaultSchema("dbo"); 
 
             modelBuilder.Entity<Comanda>() 
             .HasMany(c => c.ComandaItems)

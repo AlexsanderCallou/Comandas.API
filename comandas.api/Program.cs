@@ -1,6 +1,7 @@
 
 using Comandas.API.DataBase;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,29 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(i => {
+    i.AddSecurityRequirement(new OpenApiSecurityRequirement{
+        {
+            new OpenApiSecurityScheme{
+                Reference = new OpenApiReference{
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()  
+        }
+    });
+    i.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
+        Description = "",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+});
+
+
 
 var app = builder.Build();
 
@@ -37,6 +60,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.MapControllers();
 
 
