@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Comandas.API.DataBase;
 using Comandas.API.DTOs;
 using Comandas.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -12,6 +13,7 @@ namespace Comandas.API.Controllers{
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CardapioItemController:ControllerBase{
 
 

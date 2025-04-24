@@ -8,12 +8,14 @@ using Swashbuckle.AspNetCore.Annotations;
 using Comandas.API.DataBase;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Comandas.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MesaController:ControllerBase{
 
         public readonly ComandasDBContext _banco;

@@ -9,4 +9,15 @@ namespace Comandas.API.DTOs{
         public ICollection<ComandaItemGetDTO> ComandaItems {get;set;} = default!;
 
     }
+
+    public class ComandaPostDTO{
+
+    }
+
+    public class ComandaPutDTO{
+
+    }
+    public class ComandaDeleteDTO{
+
+    }
 }

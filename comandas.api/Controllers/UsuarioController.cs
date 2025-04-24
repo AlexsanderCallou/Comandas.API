@@ -29,6 +29,7 @@ namespace Comandas.API.Controllers {
 
         [HttpGet("{id}")]
         [SwaggerResponse(200,"Retorna um ususario.", typeof(UsuarioGetDTO))]
+        [Authorize]
         public async Task<ActionResult<UsuarioGetDTO>> GetUsuario(int id){
             
             var usuario = await _banco.Usuarios.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
@@ -48,6 +49,7 @@ namespace Comandas.API.Controllers {
 
         [HttpGet]
         [SwaggerResponse(200,"Retorna Usuarios.", typeof(IEnumerable<UsuarioGetDTO>))]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<UsuarioGetDTO>>> GetUsuarios(){
 
             var usuarios = await _banco.Usuarios.AsNoTracking().ToListAsync();
@@ -63,6 +65,7 @@ namespace Comandas.API.Controllers {
         [Authorize]
         [HttpPost]
         [SwaggerResponse(201,"Cria um usuario", typeof(UsusarioPostDTO))]
+        [Authorize]
         public async Task<ActionResult<UsusarioPostDTO>> PostUsuario(UsusarioPostDTO ususarioPostDTO){
 
             var usuario = new Usuario(){
@@ -86,6 +89,7 @@ namespace Comandas.API.Controllers {
         }
 
         [HttpPut("{Id}")]
+        [Authorize]
         public async Task<ActionResult> PutUsuario([FromRoute] int Id, [FromBody] UsuarioPutDTO usuarioPutDTO){
 
             if(Id != usuarioPutDTO.Id){
@@ -109,6 +113,7 @@ namespace Comandas.API.Controllers {
         }
 
         [HttpDelete("{Id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteUsuario(int Id){
 
             var usuario = _banco.Usuarios.FirstOrDefault(c => c.Id == Id);

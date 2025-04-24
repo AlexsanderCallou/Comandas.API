@@ -1,6 +1,9 @@
 
+using System.Text;
 using Comandas.API.DataBase;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,19 @@ var connection = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContextPool<ComandasDBContext>(config => {
     config.UseNpgsql(connection);
     config.EnableSensitiveDataLogging();
+});
+
+builder.Services.AddAuthentication(c => {
+    c.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    c.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(c => {
+        c.TokenValidationParameters = new TokenValidationParameters{
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("3e8acfc238f45a314fd4b2bde272678ad30bd1774743a11dbc5c53ac71ca494b"))
+        };
 });
 
 builder.Services.AddControllers();
@@ -29,7 +45,9 @@ builder.Services.AddSwaggerGen(i => {
         }
     });
     i.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
-        Description = "",
+        Description =   "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
+                        "Digite 'Bearer' [espaço] e então seu token no campo abaixo.\r\n\r\n" +
+                        "Exemplo (informar sem as aspas): 'Bearer 12345abcdef'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -62,8 +80,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-
-
 
 app.Run();
