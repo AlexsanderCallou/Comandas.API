@@ -12,12 +12,21 @@ namespace Comandas.API.DTOs{
 
     public class ComandaPostDTO{
 
+
+        public int NumeroMesa { get; set; }
+        public string NomeCliente { get; set; } = default!;
+        public int[] CardapioItens { get; set; } = [];
+
     }
 
     public class ComandaPutDTO{
+       
+        public int Id { get; set; }
+        public int NumeroMesa { get; set; }
+        public string NomeCliente { get; set; } = default!;      
+        public int[] CardapioItens { get; set; } = [];
+
 
     }
-    public class ComandaDeleteDTO{
 
-    }
 }

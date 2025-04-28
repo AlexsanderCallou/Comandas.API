@@ -137,12 +137,23 @@ namespace Comandas.API.Controllers {
 
             var key = Encoding.UTF8.GetBytes("3e8acfc238f45a314fd4b2bde272678ad30bd1774743a11dbc5c53ac71ca494b");
 
+            var usuario = await _banco.Usuarios.FirstOrDefaultAsync(c => c.Email == usuarioLoginResquestDTO.Email);
+
+            if (usuario is null) {
+                return NotFound("Usuario/Senha invalidos.");
+            }
+
+            if (!usuario.Senha.Equals(usuarioLoginResquestDTO.Senha)){
+                return NotFound("Usuario/Senha invalidos.");
+            }
+
+            
             var tokenDescriptor = new SecurityTokenDescriptor{
                 Expires = DateTime.UtcNow.AddHours(1),
                 Subject = new ClaimsIdentity(
                     new Claim[]{
-                        new Claim(ClaimTypes.Name,"Alex"),
-                        new Claim(ClaimTypes.NameIdentifier,"1")
+                        new Claim(ClaimTypes.Name,usuario.Nome),
+                        new Claim(ClaimTypes.NameIdentifier,usuario.Id.ToString())
                     }
                 ),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
@@ -152,7 +163,7 @@ namespace Comandas.API.Controllers {
 
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new UsuarioLoginResponseDTO{Id = 1, BearerToken = tokenString});
+            return Ok(new UsuarioLoginResponseDTO{Id = usuario.Id, BearerToken = tokenString});
 
         }
     }
