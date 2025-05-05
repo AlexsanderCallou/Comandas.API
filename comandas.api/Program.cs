@@ -1,5 +1,6 @@
 
 using System.Text;
+using Comandas.API.Controllers;
 using Comandas.API.DataBase;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,9 @@ builder.Services.AddSwaggerGen(i => {
     });
 });
 
+
+
+//builder.Services.AddScoped<ILogger<ComandaController>>();
 
 
 var app = builder.Build();

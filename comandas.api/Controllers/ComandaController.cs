@@ -16,11 +16,15 @@ namespace Comandas.API.Controllers{
     [Authorize]
     public class ComandaController : ControllerBase{
 
+        private readonly ILogger<ComandaController> _logger;
+
         private readonly ComandasDBContext _banco;
 
-        public ComandaController(ComandasDBContext comandasDBContext)
+        public ComandaController(ComandasDBContext comandasDBContext, ILogger<ComandaController> logger)
         {
             _banco = comandasDBContext;
+            _logger = logger;
+
         }
 
         [HttpGet("{id}")]
@@ -35,6 +39,8 @@ namespace Comandas.API.Controllers{
             if (comanda is null){
                 return NotFound("Comanda não encontrada.");
             }
+
+            _logger.LogInformation("Comanda Consultada: {comanda.id}",comanda.Id);
 
             var comandaGetDTO = new ComandaGetDTO {
                 Id = comanda.Id,
@@ -205,16 +211,7 @@ namespace Comandas.API.Controllers{
             }
 
             //percorrer os itens da comanda e verificar se eh uma exclusao.
-        /**
-            foreach (var item in comandaPutDTO.ComandaItems){
-                if(item.Excluir){
-                    var comandaItem = await _banco.ComandaItems.FirstOrDefaultAsync(c => c.Id == item.Id);
-                    if(comandaItem is not null){
-                        _banco.ComandaItems.Remove(comandaItem);
-                    }
-                }
-            }
-        **/
+
             var itensExcluir = new List<int>();
 
             itensExcluir = comandaPutDTO.ComandaItems.Where(c => c.Excluir).Select(c => c.Id).ToList(); 
@@ -223,7 +220,12 @@ namespace Comandas.API.Controllers{
 
             var comandaItensExcluir = await _banco.ComandaItems.Where(c => itensExcluir.Contains(c.Id)).ToListAsync();
 
+            if (!comandaItensExcluir.Any()){
+                return BadRequest("Nenhum id de item informado.");
+            }
+            
             _banco.ComandaItems.RemoveRange(comandaItensExcluir);
+
             }
             
             
@@ -269,15 +271,67 @@ namespace Comandas.API.Controllers{
 
             //fazer a persistencia dos dados.
 
+            try{
+                
+                await _banco.SaveChangesAsync();
+
+            }catch(Exception ex){
+
+                _logger.LogError(ex,"Erro interno no servidor.");
+                
+                return StatusCode(500,"Ouve um erro interno no sistema.");
+            
+            }
+            
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteComanda(int id){
+
+            var comanda = await _banco.Comandas.FindAsync(id);
+
+            if (comanda is null){
+                NotFound($"Comanda não encontrada {id}");
+            }
+
+            var comandaItems = await _banco.ComandaItems.Include(c => c.CardapioItem).Where(c => c.ComandaId == comanda.Id).ToListAsync();
+
+            var comandaItemsPreparo = comandaItems.Where(c => c.CardapioItem.PossuiPreparo).ToList();
+
+            foreach (var item in comandaItemsPreparo){
+                
+                var pedidoCozinhaItem = await _banco.PedidoCozinhaItems.Include(c => c.PedidoCozinha).Where(c => c.ComanadaItemId == item.Id).FirstAsync();
+
+                if (pedidoCozinhaItem is not null){
+                    _banco.PedidoCozinhaItems.Remove(pedidoCozinhaItem);
+                    _banco.PedidosCozinha.Remove(pedidoCozinhaItem.PedidoCozinha);
+                }
+
+            }
+
+            if (comandaItems.Any()){
+
+                _banco.ComandaItems.RemoveRange(comandaItems);
+            }
+            
+            _banco.Comandas.Remove(comanda);
+            
             await _banco.SaveChangesAsync();
 
             return NoContent();
-        } 
+
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchComanda(int id){
+
+            return null;
+
+        }  
 
     }
 
 }
 
-//colocar try catch no erro 500 do put
-
-// finalizar o delete 
+//alterar situacao da comanda
