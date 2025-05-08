@@ -1,3 +1,5 @@
+using Comandas.API.DTOs.Item;
+
 namespace Comandas.API.DTOs{
 
     public class ComandaGetDTO{
@@ -26,11 +28,12 @@ namespace Comandas.API.DTOs{
         public List<ComandaItemPutDTO> ComandaItems { get; set; } = [];
     }
 
-    public class ComandaItemPutDTO{
-        public int Id { get; set; }
-        public int CardapioItemId { get; set; }
-        public bool Excluir { get; set; } = false;
-    
+    public class ComandaPatchDTO{
+        public int SituacaoComanda { get; set; }
+    }
+
+    public class ComandaFilterDTO{
+        public int? SituacaoComanda { get; set; }
     }
 
 }

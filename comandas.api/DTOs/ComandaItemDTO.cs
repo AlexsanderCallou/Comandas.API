@@ -1,6 +1,5 @@
-using System.Runtime.CompilerServices;
 
-namespace Comandas.API.DTOs{
+namespace Comandas.API.DTOs.Item{
 
     public class ComandaItemGetDTO{
 
@@ -9,6 +8,12 @@ namespace Comandas.API.DTOs{
         public int ComandaId {get;set;}
         public string Titulo {get;set;} = default!;
         
+    }
+
+        public class ComandaItemPutDTO{
+        public int Id { get; set; }
+        public int CardapioItemId { get; set; }
+        public bool Excluir { get; set; } = false;
     }
 
 }

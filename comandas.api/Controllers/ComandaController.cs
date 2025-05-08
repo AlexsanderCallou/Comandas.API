@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
+using Comandas.API.DTOs.Item;
+
+using Microsoft.AspNetCore.JsonPatch;
 
 
 namespace Comandas.API.Controllers{
@@ -57,11 +60,15 @@ namespace Comandas.API.Controllers{
        }
 
        [HttpGet]
-       public async Task<ActionResult<IEnumerable<ComandaGetDTO>>> GetComandas(){
+       public async Task<ActionResult<IEnumerable<ComandaGetDTO>>> GetComandas([FromQuery]ComandaFilterDTO comandaFilterDTO){
 
-        var comandas = await _banco.Comandas
-                .Where(c => c.SituacaoComanda == (int)SituacaoComanda.Aberto)
-                .Select(c => new ComandaGetDTO{
+        var query = _banco.Comandas.AsQueryable();
+
+        if (comandaFilterDTO.SituacaoComanda.HasValue){
+            query = query.Where(c => c.SituacaoComanda == comandaFilterDTO.SituacaoComanda);
+        }
+
+        var comandas = await query.Select(c => new ComandaGetDTO{
                     Id = c.Id,
                     NumeroMesa = c.NumeroMesa,
                     NomeCliente = c.NomeCliente,
@@ -323,10 +330,33 @@ namespace Comandas.API.Controllers{
 
         }
 
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> PatchComanda(int id){
 
-            return null;
+        
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchComanda(int id, [FromBody]ComandaPatchDTO comandaPatchDTO){
+
+            var comanda = await _banco.Comandas.FindAsync(id);
+
+            if (comanda is null){
+                return BadRequest("Comanda não encontrada.");
+            }
+            
+            comanda.SituacaoComanda = comandaPatchDTO.SituacaoComanda;
+
+            if (comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Fechado){
+
+                var mesa = await _banco.Mesas.Where(c => c.NumeroMesa == comanda.NumeroMesa).FirstOrDefaultAsync();
+
+                if (mesa is null){
+                    return BadRequest("Mesa não encontrada");
+                }
+
+                mesa.SituacaoMesa = (int)SituacaoMesa.Disponivel;
+
+            }
+            await _banco.SaveChangesAsync();
+            
+            return NoContent();
 
         }  
 
