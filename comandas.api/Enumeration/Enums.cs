@@ -10,7 +10,7 @@ namespace Comandas.API.Enumeration{
     }
     enum SituacaoPedidoCozinha{
         Pendente = 1,
-        Andamento = 2,
+        EmPreparo = 2,
         Finalizado = 3,
         Entregue = 4,
     }

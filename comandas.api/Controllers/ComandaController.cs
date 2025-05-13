@@ -363,5 +363,3 @@ namespace Comandas.API.Controllers{
     }
 
 }
-
-//alterar situacao da comanda

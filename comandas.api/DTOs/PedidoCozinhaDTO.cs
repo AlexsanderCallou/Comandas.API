@@ -1,16 +1,23 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks.Dataflow;
 
-namespace Comandas.API.DTOs{
+namespace Comandas.API.DTOs
+{
 
-    public class PedidoCozinhaGetDTO {
+    public class PedidoCozinhaGetDTO 
+    {
 
         public int Id { get; set; }
-        public int ComandaId {get; set;}
-        public int SituacaoId {get; set;}
+        public int NumeroMesa { get; set; }
+        public string NomeCliente { get; set; } = default!;
+        public string TituloItem { get; set; } = default!;
         
-        //public virtual ICollection<PedidoCozinhaItem> PedidoCozinhaItems {get;set;}
 
+    }
+
+    public class PedidioCozinhaPatchDTO
+    {
+        public int SituacaoPedidoCozinhaId { get; set;}
     }
 
 }
