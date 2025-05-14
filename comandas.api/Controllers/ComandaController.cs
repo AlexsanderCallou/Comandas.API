@@ -5,10 +5,7 @@ using Comandas.API.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http.Features;
 using Comandas.API.DTOs.Item;
-
-using Microsoft.AspNetCore.JsonPatch;
 
 
 namespace Comandas.API.Controllers{

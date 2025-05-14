@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
         <PrivateAssets>all</PrivateAssets>
@@ -22,9 +22,10 @@
   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
   <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.8" />
   </ItemGroup>
-
-  
-
-
+  <ItemGroup>
+    <ProjectReference Include="..\comandas.Domain\comandas.Domain.csproj" />
+    <ProjectReference Include="..\comandas.Services\comandas.Services.csproj" />
+    <ProjectReference Include="..\comandas.Shared\comandas.Shared.csproj" />
+  </ItemGroup>
 
 </Project>

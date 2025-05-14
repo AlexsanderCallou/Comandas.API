@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\comandas.Domain\comandas.Domain.csproj" />
+    <ProjectReference Include="..\comandas.Shared\comandas.Shared.csproj" />
+    <ProjectReference Include="..\comandas.Data\comandas.Data.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
