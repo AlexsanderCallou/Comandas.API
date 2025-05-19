@@ -1,4 +1,4 @@
-namespace Comandas.API.Enumeration{
+namespace Comandas.Shared.Enumeration{
 
     enum SituacaoComanda{
         Aberto = 1,

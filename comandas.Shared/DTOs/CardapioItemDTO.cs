@@ -1,4 +1,4 @@
-namespace Comandas.API.DTOs {
+namespace Comandas.Shared.DTOs {
 
     public class CardapioItemGetDTO {
         public int Id { get; set; }

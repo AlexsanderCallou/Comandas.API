@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.Design;
 
-namespace  Comandas.API.Models{
+namespace  Comandas.Domain{
 
     public class PedidoCozinha {
 

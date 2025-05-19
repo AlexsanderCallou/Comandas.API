@@ -86,15 +86,11 @@ public class UnitTest1
 
         var resultComandas = Assert.IsType<List<ComandaGetDTO>>(result200.Value);
 
-
-
         Assert.NotEmpty(resultComandas);
         Assert.All(resultComandas,c => Assert.Equal(1,c.Id));
         Assert.All(resultComandas,c => Assert.Equal("Alex", c.NomeCliente));
         
         //arange 
-
-
 
     }
 }

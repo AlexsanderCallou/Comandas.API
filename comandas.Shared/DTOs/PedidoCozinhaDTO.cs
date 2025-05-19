@@ -1,7 +1,5 @@
-using System.Runtime.InteropServices;
-using System.Threading.Tasks.Dataflow;
 
-namespace Comandas.API.DTOs
+namespace Comandas.Shared.DTOs
 {
 
     public class PedidoCozinhaGetDTO 

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Comandas.API.Models;
+using Comandas.Domain;
 
-namespace Comandas.API.Models {
+namespace Comandas.Domain {
 
     public class Comanda {
 

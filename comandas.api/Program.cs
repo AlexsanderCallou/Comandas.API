@@ -1,6 +1,10 @@
 
 using System.Text;
-using Comandas.API.Controllers;
+using comandas.Data.Implementation;
+using comandas.Data.Interface;
+using comandas.Services.Implementation;
+using comandas.Services.Interfaces;
+using Comandas.Data;
 using Comandas.API.DataBase;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +21,10 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
     config.UseNpgsql(connection);
     config.EnableSensitiveDataLogging();
 });
+
+builder.Services.AddScoped<IUsuarioService,UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository,UsuarioRepository>();
+
 
 builder.Services.AddAuthentication(c => {
     c.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

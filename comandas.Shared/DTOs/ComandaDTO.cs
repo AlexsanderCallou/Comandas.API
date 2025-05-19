@@ -1,6 +1,6 @@
-using Comandas.API.DTOs.Item;
+using Comandas.Shared.DTOs.Item;
 
-namespace Comandas.API.DTOs{
+namespace Comandas.Shared.DTOs{
 
     public class ComandaGetDTO{
 

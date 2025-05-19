@@ -1,5 +1,5 @@
 
-namespace Comandas.API.DTOs.Item{
+namespace Comandas.Shared.DTOs.Item{
 
     public class ComandaItemGetDTO{
 

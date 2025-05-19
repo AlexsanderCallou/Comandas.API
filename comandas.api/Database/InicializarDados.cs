@@ -1,8 +1,8 @@
 
-using Comandas.API.Models;
+using Comandas.Domain;
+using Comandas.Data;
 
 namespace Comandas.API.DataBase {
-
 
     public static class InicializarDados{
 

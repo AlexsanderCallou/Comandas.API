@@ -1,15 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
-using Comandas.API.DataBase;
-using Comandas.API.DTOs;
-using Comandas.API.Models;
+using Comandas.Data;
+using Comandas.Shared.DTOs;
+using Comandas.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
+using comandas.Services.Interfaces;
 
 namespace Comandas.API.Controllers {
 
@@ -20,10 +20,14 @@ namespace Comandas.API.Controllers {
 
         public readonly ComandasDBContext _banco;
 
-        public UsuarioController(ComandasDBContext comandasDBContext){
+        public readonly IUsuarioService _usuarioService;
+
+
+
+        public UsuarioController(ComandasDBContext comandasDBContext, IUsuarioService usuarioService){
 
             _banco = comandasDBContext;
-
+            _usuarioService = usuarioService;
         }
 
 

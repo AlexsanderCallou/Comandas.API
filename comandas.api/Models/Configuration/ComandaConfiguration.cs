@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Comandas.Domain;
 
 namespace Comandas.API.Models.Configuration {
 

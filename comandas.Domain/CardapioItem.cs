@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
-namespace Comandas.API.Models {
+namespace Comandas.Domain {
 
     public class CardapioItem{
         [Key]

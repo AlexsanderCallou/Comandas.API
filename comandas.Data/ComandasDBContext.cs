@@ -1,10 +1,10 @@
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Authentication;
-using Comandas.API.Models;
+using Comandas.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Comandas.API.DataBase{
+namespace Comandas.Data{
 
     public class ComandasDBContext:DbContext{
 
