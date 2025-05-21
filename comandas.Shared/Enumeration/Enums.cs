@@ -1,14 +1,14 @@
 namespace Comandas.Shared.Enumeration{
 
-    enum SituacaoComanda{
+    public enum SituacaoComanda{
         Aberto = 1,
         Fechado = 2
     }
-    enum SituacaoMesa{
+    public enum SituacaoMesa{
         Disponivel = 0,
         Ocupada = 1
     }
-    enum SituacaoPedidoCozinha{
+    public enum SituacaoPedidoCozinha{
         Pendente = 1,
         EmPreparo = 2,
         Finalizado = 3,

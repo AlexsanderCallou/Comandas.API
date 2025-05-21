@@ -1,5 +1,8 @@
 using Comandas.API.DataBase;
-using Comandas.API.DTOs;
+using Comandas.Shared.DTOs;
+using Comandas.Shared.Enumeration;
+using Comandas.Data;
+using Comandas.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

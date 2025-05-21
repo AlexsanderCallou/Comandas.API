@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Comandas.API.DataBase;
-using Comandas.API.DTOs;
+using Comandas.Domain;
+using Comandas.Data;
+using Comandas.Shared.DTOs;
 using Comandas.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

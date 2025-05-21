@@ -27,5 +27,8 @@
     <ProjectReference Include="..\comandas.Services\comandas.Services.csproj" />
     <ProjectReference Include="..\comandas.Shared\comandas.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models/" />
+  </ItemGroup>
 
 </Project>

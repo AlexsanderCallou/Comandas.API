@@ -1,11 +1,13 @@
 using Comandas.API.DataBase;
-using Comandas.API.DTOs;
 using Comandas.API.Models;
-using Comandas.API.Enumeration;
+using Comandas.Domain;
+using Comandas.Data;
+using Comandas.Shared.DTOs;
+using Comandas.Shared.DTOs.Item;
+using Comandas.Shared.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Comandas.API.DTOs.Item;
 
 
 namespace Comandas.API.Controllers{

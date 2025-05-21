@@ -22,8 +22,6 @@ namespace Comandas.API.Controllers {
 
         public readonly IUsuarioService _usuarioService;
 
-
-
         public UsuarioController(ComandasDBContext comandasDBContext, IUsuarioService usuarioService){
 
             _banco = comandasDBContext;
@@ -32,63 +30,37 @@ namespace Comandas.API.Controllers {
 
 
         [HttpGet("{id}")]
-        [SwaggerResponse(200,"Retorna um ususario.", typeof(UsuarioGetDTO))]
+        [SwaggerResponse(200,"Retorna um usuario.", typeof(UsuarioGetDTO))]
         [Authorize]
-        public async Task<ActionResult<UsuarioGetDTO>> GetUsuario(int id){
-            
-            var usuario = await _banco.Usuarios.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+        public async Task<ActionResult<UsuarioGetDTO>> GetUsuario(int id)
+        {
+           
+            var usuario = await _usuarioService.GetUsuario(id);
 
             if(usuario is null){
                 return NotFound("Usuario não encontrado.");
             }
 
-            return Ok(
-                new UsuarioGetDTO(){
-                        Id = usuario.Id, //mas por que??
-                        Nome = usuario.Nome,
-                        Email = usuario.Email
-                }
-            );
+            return Ok(usuario);
         }
 
         [HttpGet]
         [SwaggerResponse(200,"Retorna Usuarios.", typeof(IEnumerable<UsuarioGetDTO>))]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<UsuarioGetDTO>>> GetUsuarios(){
-
-            var usuarios = await _banco.Usuarios.AsNoTracking().ToListAsync();
-
-            return Ok(usuarios.Select(c => new UsuarioGetDTO{
-                        Id = c.Id,
-                        Nome = c.Nome,
-                        Email = c.Email 
-            }
-            ));
+        public async Task<ActionResult<IEnumerable<UsuarioGetDTO>>> GetUsuarios()
+        {
+            return Ok(await _usuarioService.GetUsuarios());
         }
 
         [Authorize]
         [HttpPost]
-        [SwaggerResponse(201,"Cria um usuario", typeof(UsusarioPostDTO))]
+        [SwaggerResponse(201,"Cria um usuario", typeof(UsuarioPostDTO))]
         [Authorize]
-        public async Task<ActionResult<UsusarioPostDTO>> PostUsuario(UsusarioPostDTO ususarioPostDTO){
+        public async Task<ActionResult<UsuarioPostDTO>> PostUsuario(UsuarioPostDTO usuarioPostDTO){
 
-            var usuario = new Usuario(){
-                    Nome = ususarioPostDTO.Nome,
-                    Email = ususarioPostDTO.Email,
-                    Senha = ususarioPostDTO.Senha
-            };
+            var usuarioResponse = await _usuarioService.PostUsuario(usuarioPostDTO);
 
-            _banco.Usuarios.Add(usuario);
-
-            await _banco.SaveChangesAsync();
-
-            var usuarioResponse = new UsuarioPostResponseDTO(){
-                Id = usuario.Id,
-                Nome = usuario.Nome,
-                Email = usuario.Email
-            };
-
-            return CreatedAtAction("GetUsuario", new {id = usuarioResponse.Id}, usuarioResponse);
+            return CreatedAtAction("GetUsuario", new { id = usuarioResponse.Id }, usuarioResponse);
 
         }
 

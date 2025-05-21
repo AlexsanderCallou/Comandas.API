@@ -2,7 +2,10 @@
 
 using Comandas.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Comandas.API.DTOs;
+using Comandas.Shared.DTOs;
+using Comandas.Shared.Enumeration;
+using Comandas.Data;
+using Comandas.Domain;
 using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
 using Comandas.API.DataBase;

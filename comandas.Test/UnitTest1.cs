@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Comandas.API.Controllers;
-using Comandas.API.DataBase;
-using Comandas.API.DTOs;
-using Comandas.API.Models;
+using Comandas.Data;
+using Comandas.Shared.DTOs;
+using Comandas.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

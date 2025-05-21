@@ -6,7 +6,7 @@ namespace Comandas.Shared.DTOs{
         public string Email { get; set; } = default!;
     }
 
-    public class UsusarioPostDTO{
+    public class UsuarioPostDTO{
         public string Nome { get; set; } = default!;   
         public string Email { get; set; } = default!;
         public string Senha { get; set; } = default!;
