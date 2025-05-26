@@ -14,7 +14,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 //Obeter a connection string do banco
-var connection = builder.Configuration.GetConnectionString("Default");
+var connection = builder.Configuration.GetConnectionString("Production");
 
 //Adicionar o contexto do banco de dados a piperline do app
 builder.Services.AddDbContextPool<ComandasDBContext>(config => {

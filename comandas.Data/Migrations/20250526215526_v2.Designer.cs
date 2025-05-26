@@ -8,23 +8,24 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace comandas.api.Migrations
+namespace comandas.Data.Migrations
 {
     [DbContext(typeof(ComandasDBContext))]
-    [Migration("20250415180718_v7")]
-    partial class v7
+    [Migration("20250526215526_v2")]
+    partial class v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Comandas.API.Models.CardapioItem", b =>
+            modelBuilder.Entity("Comandas.Domain.CardapioItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,10 +54,10 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_cardapio_item", (string)null);
+                    b.ToTable("tb_cardapio_item", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
+            modelBuilder.Entity("Comandas.Domain.Comanda", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,10 +81,10 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_comanda", (string)null);
+                    b.ToTable("tb_comanda", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.ComandaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,10 +107,10 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_comanda_item", (string)null);
+                    b.ToTable("tb_comanda_item", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Mesa", b =>
+            modelBuilder.Entity("Comandas.Domain.Mesa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,10 +129,10 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_mesa", (string)null);
+                    b.ToTable("tb_mesa", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -152,10 +153,10 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("tb_pedido_cozinha", (string)null);
+                    b.ToTable("tb_pedido_cozinha", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinhaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,10 +179,10 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("PedidoCozinhaId");
 
-                    b.ToTable("tb_pedido_cozinha_item", (string)null);
+                    b.ToTable("tb_pedido_cozinha_item", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Usuario", b =>
+            modelBuilder.Entity("Comandas.Domain.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,18 +208,18 @@ namespace comandas.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_usuario", (string)null);
+                    b.ToTable("tb_usuario", "dbo");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.ComandaItem", b =>
                 {
-                    b.HasOne("Comandas.API.Models.CardapioItem", "CardapioItem")
+                    b.HasOne("Comandas.Domain.CardapioItem", "CardapioItem")
                         .WithMany()
                         .HasForeignKey("CardapioItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Comandas.API.Models.Comanda", "Comanda")
+                    b.HasOne("Comandas.Domain.Comanda", "Comanda")
                         .WithMany("ComandaItems")
                         .HasForeignKey("ComandaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -229,9 +230,9 @@ namespace comandas.api.Migrations
                     b.Navigation("Comanda");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
-                    b.HasOne("Comandas.API.Models.Comanda", "Comanda")
+                    b.HasOne("Comandas.Domain.Comanda", "Comanda")
                         .WithMany()
                         .HasForeignKey("ComandaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -240,15 +241,15 @@ namespace comandas.api.Migrations
                     b.Navigation("Comanda");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinhaItem", b =>
                 {
-                    b.HasOne("Comandas.API.Models.ComandaItem", "ComandaItem")
+                    b.HasOne("Comandas.Domain.ComandaItem", "ComandaItem")
                         .WithMany()
                         .HasForeignKey("ComanadaItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Comandas.API.Models.PedidoCozinha", "PedidoCozinha")
+                    b.HasOne("Comandas.Domain.PedidoCozinha", "PedidoCozinha")
                         .WithMany("PedidoCozinhaItems")
                         .HasForeignKey("PedidoCozinhaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -259,12 +260,12 @@ namespace comandas.api.Migrations
                     b.Navigation("PedidoCozinha");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
+            modelBuilder.Entity("Comandas.Domain.Comanda", b =>
                 {
                     b.Navigation("ComandaItems");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
                     b.Navigation("PedidoCozinhaItems");
                 });

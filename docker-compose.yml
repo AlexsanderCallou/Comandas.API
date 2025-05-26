@@ -1,0 +1,26 @@
+services:
+  comandas.api:
+    image: ${DOCKER_REGISTRY-}comandasapi
+    build:
+      context: .
+      dockerfile: comandas.api/Dockerfile
+    networks:
+      - comandas
+  postgres: 
+    image: postgres:16.6
+    restart: always
+    environment: 
+      POSTGRES_DB: COMANDAS_DB
+      POSTGRES_USER: adm
+      POSTGRES_PASSWORD: 4524
+    volumes:
+      - comandasdb_data:/var/lib/postgresql/data 
+    ports:
+      - "5432:5432" 
+    networks: 
+      - comandas
+networks:
+  comandas:
+volumes:  
+  comandasdb_data:
+

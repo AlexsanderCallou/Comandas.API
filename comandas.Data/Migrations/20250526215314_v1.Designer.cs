@@ -8,11 +8,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace comandas.api.Migrations
+namespace comandas.Data.Migrations
 {
     [DbContext(typeof(ComandasDBContext))]
-    [Migration("20250409220918_v3")]
-    partial class v3
+    [Migration("20250526215314_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,69 +24,81 @@ namespace comandas.api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Comandas.API.Models.CardapioItem", b =>
+            modelBuilder.Entity("Comandas.Domain.CardapioItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("tx_descricao");
 
                     b.Property<bool>("PossuiPreparo")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("ic_preparo");
 
                     b.Property<decimal>("Preco")
-                        .HasColumnType("numeric");
+                        .HasColumnType("numeric")
+                        .HasColumnName("vl_preco");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("no_item");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CardapioItems");
+                    b.ToTable("tb_cardapio_item", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
+            modelBuilder.Entity("Comandas.Domain.Comanda", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("NomeCliente")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("no_cliente");
 
                     b.Property<int>("NumeroMesa")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("nu_mesa");
 
                     b.Property<int>("SituacaoComanda")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("ic_situacao");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Comandas");
+                    b.ToTable("tb_comanda", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.ComandaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CardapioItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id_cardapio_item");
 
                     b.Property<int>("ComandaId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id_comanda");
 
                     b.HasKey("Id");
 
@@ -94,65 +106,71 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("ComandaItems");
+                    b.ToTable("tb_comanda_item", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Mesa", b =>
+            modelBuilder.Entity("Comandas.Domain.Mesa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("ID");
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("NumeroMesa")
                         .HasColumnType("integer")
-                        .HasColumnName("NUM_MESA");
+                        .HasColumnName("nu_mesa");
 
                     b.Property<int>("SituacaoMesa")
                         .HasColumnType("integer")
-                        .HasColumnName("IC_SITUACAO");
+                        .HasColumnName("ic_situacao");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TB_MESA", (string)null);
+                    b.ToTable("tb_mesa", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComandaId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id_comanda");
 
                     b.Property<int>("SituacaoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("ic_situacao");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("PedidosCozinha");
+                    b.ToTable("tb_pedido_cozinha", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinhaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComanadaItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id_comanda_item");
 
                     b.Property<int>("PedidoCozinhaId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id_pedido_cozinha");
 
                     b.HasKey("Id");
 
@@ -160,43 +178,47 @@ namespace comandas.api.Migrations
 
                     b.HasIndex("PedidoCozinhaId");
 
-                    b.ToTable("PedidoCozinhaItems");
+                    b.ToTable("tb_pedido_cozinha_item", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Usuario", b =>
+            modelBuilder.Entity("Comandas.Domain.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("tx_email");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("no_ususario");
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("tx_senha");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("tb_usuario", (string)null);
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.ComandaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.ComandaItem", b =>
                 {
-                    b.HasOne("Comandas.API.Models.CardapioItem", "CardapioItem")
+                    b.HasOne("Comandas.Domain.CardapioItem", "CardapioItem")
                         .WithMany()
                         .HasForeignKey("CardapioItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Comandas.API.Models.Comanda", "Comanda")
+                    b.HasOne("Comandas.Domain.Comanda", "Comanda")
                         .WithMany("ComandaItems")
                         .HasForeignKey("ComandaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -207,9 +229,9 @@ namespace comandas.api.Migrations
                     b.Navigation("Comanda");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
-                    b.HasOne("Comandas.API.Models.Comanda", "Comanda")
+                    b.HasOne("Comandas.Domain.Comanda", "Comanda")
                         .WithMany()
                         .HasForeignKey("ComandaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -218,15 +240,15 @@ namespace comandas.api.Migrations
                     b.Navigation("Comanda");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinhaItem", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinhaItem", b =>
                 {
-                    b.HasOne("Comandas.API.Models.ComandaItem", "ComandaItem")
+                    b.HasOne("Comandas.Domain.ComandaItem", "ComandaItem")
                         .WithMany()
                         .HasForeignKey("ComanadaItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Comandas.API.Models.PedidoCozinha", "PedidoCozinha")
+                    b.HasOne("Comandas.Domain.PedidoCozinha", "PedidoCozinha")
                         .WithMany("PedidoCozinhaItems")
                         .HasForeignKey("PedidoCozinhaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -237,12 +259,12 @@ namespace comandas.api.Migrations
                     b.Navigation("PedidoCozinha");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.Comanda", b =>
+            modelBuilder.Entity("Comandas.Domain.Comanda", b =>
                 {
                     b.Navigation("ComandaItems");
                 });
 
-            modelBuilder.Entity("Comandas.API.Models.PedidoCozinha", b =>
+            modelBuilder.Entity("Comandas.Domain.PedidoCozinha", b =>
                 {
                     b.Navigation("PedidoCozinhaItems");
                 });
