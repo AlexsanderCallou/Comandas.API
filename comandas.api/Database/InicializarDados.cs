@@ -7,29 +7,34 @@ namespace Comandas.API.DataBase {
     public static class InicializarDados{
 
         public static void Semear(ComandasDBContext banco){
-            if (!banco.CardapioItems.Any()){
 
-            banco.CardapioItems.AddRange(
-                new CardapioItem(){
-                    Titulo = "X-Salada",
-                    Descricao = "Bife, ovo, presunto e queijo",
-                    Preco = 10.00M,
-                    PossuiPreparo = true
-                },
-                    new CardapioItem(){
-                    Titulo = "X-Bacon",
-                    Descricao = "Bife, ovo, presunto e queijo",
-                    Preco = 12.00M,
-                    PossuiPreparo = true
-                },
-                   new CardapioItem(){
-                    Titulo = "Coca Cola KS",
-                    Descricao = "Coca de vidro.",
-                    Preco = 4.00M,
-                    PossuiPreparo = false
-                }
-                
-            );
+            if (!banco.CardapioItems.Any())
+            {
+
+                banco.CardapioItems.AddRange(
+                    new CardapioItem()
+                    {
+                        Titulo = "X-Salada",
+                        Descricao = "Bife, ovo, presunto e queijo",
+                        Preco = 10.00M,
+                        PossuiPreparo = true
+                    },
+                        new CardapioItem()
+                        {
+                            Titulo = "X-Bacon",
+                            Descricao = "Bife, ovo, presunto e queijo",
+                            Preco = 12.00M,
+                            PossuiPreparo = true
+                        },
+                       new CardapioItem()
+                       {
+                           Titulo = "Coca Cola KS",
+                           Descricao = "Coca de vidro.",
+                           Preco = 4.00M,
+                           PossuiPreparo = false
+                       }
+
+                );
             }
 
             if(!banco.Mesas.Any()){
@@ -59,13 +64,15 @@ namespace Comandas.API.DataBase {
                     }
                 );
             }
-
-            if(!banco.Comandas.Any()){
-                var comanda = new Comanda{
+            
+            if (!banco.Comandas.Any())
+            {
+                var comanda = new Comanda
+                {
                     NomeCliente = "Alex",
                     NumeroMesa = 1,
-                    SituacaoComanda = 1                        
-                    };
+                    SituacaoComanda = 1
+                };
                 banco.Comandas.Add(comanda);
 
                 ComandaItem[] comandaItems = {
@@ -81,12 +88,13 @@ namespace Comandas.API.DataBase {
                                             Comanda = comanda,
                                             CardapioItemId = 3
                                         }
-                }; 
-                if(!banco.ComandaItems.Any()){
+                };
+                if (!banco.ComandaItems.Any())
+                {
                     banco.ComandaItems.AddRange(comandaItems);
                 }
 
-                PedidoCozinha pedidoCozinha = new PedidoCozinha{Comanda = comanda};
+                PedidoCozinha pedidoCozinha = new PedidoCozinha { Comanda = comanda };
 
                 PedidoCozinhaItem[] pedidoCozinhaItems = {
                                     new PedidoCozinhaItem{
@@ -100,6 +108,14 @@ namespace Comandas.API.DataBase {
                 banco.PedidoCozinhaItems.AddRange(pedidoCozinhaItems);
 
             }
+
+            var usuarioLogin = new Usuario
+            {
+                Nome = "login",
+                Email = "string",
+                Senha = "string"
+            };
+            banco.Usuarios.Add(usuarioLogin);
             
             banco.SaveChanges();
         }

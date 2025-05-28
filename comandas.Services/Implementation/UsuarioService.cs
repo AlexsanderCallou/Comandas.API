@@ -37,5 +37,14 @@ public class UsuarioService : IUsuarioService
         }
     }
 
-    
+    public async Task<bool> PutUsuario(UsuarioPutDTO usuarioPutDTO)
+    {
+        return await _usuarioRepository.PutUsuario(usuarioPutDTO);
+    }
+
+    public async Task<bool> DeleteUsuario(int Id)
+    {
+        return await _usuarioRepository.DeleteUsuario(Id);
+    }
+
 }

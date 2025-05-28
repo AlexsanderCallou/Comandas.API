@@ -11,7 +11,7 @@ public class UsuarioRepository : IUsuarioRepository
 {
 
     public readonly ComandasDBContext _banco;
-    
+
     public UsuarioRepository(ComandasDBContext comandasDBContext)
     {
         _banco = comandasDBContext;
@@ -70,5 +70,32 @@ public class UsuarioRepository : IUsuarioRepository
             Nome = usuario.Nome,
             Email = usuario.Email
         };
+    }
+
+    public async Task<bool> PutUsuario(UsuarioPutDTO usuarioPutDTO)
+    {
+        var usuario = await _banco.Usuarios.Where(c => c.Id == usuarioPutDTO.Id)
+                                           .ExecuteUpdateAsync(c => c
+                                           .SetProperty(c => c.Nome, usuarioPutDTO.Nome)
+                                           .SetProperty(c => c.Email, usuarioPutDTO.Email)
+                                           .SetProperty(c => c.Senha, usuarioPutDTO.Senha)
+                                           );
+
+        if (usuario > 0)
+        {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public async Task<bool> DeleteUsuario(int Id)
+    {
+        if (await _banco.Usuarios.Where(c => c.Id == Id).ExecuteDeleteAsync() > 0)
+        {
+            return true;
+        }
+
+        return false;     
     }
 }

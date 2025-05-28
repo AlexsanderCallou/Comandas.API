@@ -1,3 +1,5 @@
+using System.Reflection.Metadata;
+
 namespace Comandas.Shared.DTOs{
 
     public class UsuarioGetDTO{
@@ -25,12 +27,24 @@ namespace Comandas.Shared.DTOs{
         public string Senha { get; set; } = default!;
     }
 
-    public class UsuarioLoginResponseDTO{
+    public class UsuarioPutResponseDTO 
+    {
+
+    }
+
+    public class UsuarioDeleteResponseDTO
+    {
+        
+    }
+
+    public class UsuarioLoginResponseDTO
+    {
         public int Id { get; set; }
         public string BearerToken { get; set; } = default!;
     }
 
-    public class UsuarioLoginResquestDTO{
+    public class UsuarioLoginResquestDTO
+    {
         public string Email { get; set; } = default!;
         public string Senha { get; set; } = default!;
     }

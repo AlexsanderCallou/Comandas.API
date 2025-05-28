@@ -29,7 +29,7 @@ namespace Comandas.API.Controllers {
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]  
         [SwaggerResponse(200,"Retorna um usuario.", typeof(UsuarioGetDTO))]
         [Authorize]
         public async Task<ActionResult<UsuarioGetDTO>> GetUsuario(int id)
@@ -72,37 +72,28 @@ namespace Comandas.API.Controllers {
                 return BadRequest();
             }
 
-            var usuario = _banco.Usuarios.FirstOrDefault(c => c.Id == Id);
-            
-            if (usuario is null){
-                return NotFound("Usuario não encontrado.");
+            if (await _usuarioService.PutUsuario(usuarioPutDTO))
+            {
+                return NoContent();
             }
-
-            usuario.Nome = usuarioPutDTO.Nome;
-            usuario.Email = usuarioPutDTO.Email;
-            usuario.Senha = usuarioPutDTO.Senha;
-
-            await _banco.SaveChangesAsync();
-
-            return NoContent();
-
+            else
+            {
+                return UnprocessableEntity();
+            }
         }
 
         [HttpDelete("{Id}")]
         [Authorize]
         public async Task<ActionResult> DeleteUsuario(int Id){
 
-            var usuario = _banco.Usuarios.FirstOrDefault(c => c.Id == Id);
-
-            if(usuario is null){
-                return NotFound("Usuario não encontrado.");
+            if (await _usuarioService.DeleteUsuario(Id))
+            {
+                return NoContent();
             }
-            
-            _banco.Usuarios.Remove(usuario);
-
-            await _banco.SaveChangesAsync();
-
-            return NoContent();
+            else
+            {
+                return UnprocessableEntity();
+            }
 
         }
 

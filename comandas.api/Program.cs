@@ -10,8 +10,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//conexao com o redis
+var connRedis = ConnectionMultiplexer.Connect("redis:6379");
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(connRedis);
 
 //Obeter a connection string do banco
 var connection = builder.Configuration.GetConnectionString("Docker");
