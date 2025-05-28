@@ -10,7 +10,7 @@ services:
     image: postgres:16.6
     restart: always
     environment: 
-      POSTGRES_DB: COMANDAS_DB
+      POSTGRES_DB: comandas_db
       POSTGRES_USER: adm
       POSTGRES_PASSWORD: 4524
     volumes:
