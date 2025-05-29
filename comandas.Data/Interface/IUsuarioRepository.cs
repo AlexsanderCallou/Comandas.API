@@ -1,7 +1,7 @@
 using System;
 using Comandas.Shared.DTOs;
 
-namespace comandas.Data.Interface;
+namespace Comandas.Data.Interface;
 
 public interface IUsuarioRepository
 {

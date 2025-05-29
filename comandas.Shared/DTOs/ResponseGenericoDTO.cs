@@ -2,7 +2,7 @@ using System.Reflection.Metadata;
 
 namespace Comandas.Shared.DTOs
 {
-    public class ResponseGenerico<T>
+    public class ResponseGenericoDTO<T>
     {
         public bool RetornoSucesso { get; set; }
         public string Mensagem { get; set; } = default!;

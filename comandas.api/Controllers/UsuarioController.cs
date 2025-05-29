@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
-using comandas.Services.Interfaces;
+using Comandas.Services.Interfaces;
 
 namespace Comandas.API.Controllers {
 

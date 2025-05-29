@@ -1,11 +1,11 @@
 using System;
-using comandas.Data.Interface;
+using Comandas.Data.Interface;
 using Comandas.Shared.DTOs;
 using Comandas.Data;
 using Microsoft.EntityFrameworkCore;
 using Comandas.Domain;
 
-namespace comandas.Data.Implementation;
+namespace Comandas.Data.Implementation;
 
 public class UsuarioRepository : IUsuarioRepository
 {

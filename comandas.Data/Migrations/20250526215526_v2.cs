@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace comandas.Data.Migrations
+namespace Comandas.Data.Migrations
 {
     /// <inheritdoc />
     public partial class v2 : Migration

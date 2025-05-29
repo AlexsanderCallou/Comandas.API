@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace comandas.Data.Migrations
+namespace Comandas.Data.Migrations
 {
     [DbContext(typeof(ComandasDBContext))]
     [Migration("20250526215314_v1")]

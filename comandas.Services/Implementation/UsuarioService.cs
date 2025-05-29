@@ -1,9 +1,9 @@
 using System;
-using comandas.Data.Interface;
-using comandas.Services.Interfaces;
+using Comandas.Data.Interface;
+using Comandas.Services.Interfaces;
 using Comandas.Shared.DTOs;
 
-namespace comandas.Services.Implementation;
+namespace Comandas.Services.Implementation;
 
 public class UsuarioService : IUsuarioService
 {

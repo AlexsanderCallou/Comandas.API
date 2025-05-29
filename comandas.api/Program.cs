@@ -1,9 +1,9 @@
 
 using System.Text;
-using comandas.Data.Implementation;
-using comandas.Data.Interface;
-using comandas.Services.Implementation;
-using comandas.Services.Interfaces;
+using Comandas.Data.Implementation;
+using Comandas.Data.Interface;
+using Comandas.Services.Implementation;
+using Comandas.Services.Interfaces;
 using Comandas.Data;
 using Comandas.API.DataBase;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
