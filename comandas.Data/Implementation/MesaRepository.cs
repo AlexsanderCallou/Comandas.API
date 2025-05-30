@@ -68,10 +68,10 @@ namespace Comandas.Data.Implementation
             };
         }
 
-        public async Task<bool> PutMesa(int Id, MesaPutDTO mesaPutDTO)
+        public async Task<bool> PutMesa(MesaPutDTO mesaPutDTO)
         {
             var mesa = await _banco.Mesas
-                                    .Where(m => m.Id == Id)
+                                    .Where(m => m.Id == mesaPutDTO.Id)
                                     .ExecuteUpdateAsync(m => m
                                     .SetProperty(m => m.NumeroMesa, mesaPutDTO.NumeroMesa)
                                     .SetProperty(m => m.SituacaoMesa, mesaPutDTO.SituacaoMesa)
@@ -80,10 +80,7 @@ namespace Comandas.Data.Implementation
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
         public async Task<bool> DeleteMesa(int Id)
         {
@@ -91,10 +88,8 @@ namespace Comandas.Data.Implementation
             if (await _banco.Mesas.Where(m => m.Id == Id).ExecuteDeleteAsync() > 0)
             {
                 return true;
-            } else {
-                return false;
             }
-
+                return false;
         }
 
     }

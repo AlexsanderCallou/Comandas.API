@@ -76,10 +76,8 @@ namespace Comandas.API.Controllers {
             {
                 return NoContent();
             }
-            else
-            {
+
                 return UnprocessableEntity();
-            }
         }
 
         [HttpDelete("{Id}")]
@@ -90,11 +88,7 @@ namespace Comandas.API.Controllers {
             {
                 return NoContent();
             }
-            else
-            {
                 return UnprocessableEntity();
-            }
-
         }
 
         [HttpPost("Login")]

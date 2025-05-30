@@ -15,7 +15,7 @@ using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 
 //conexao com o redis
-var connRedis = ConnectionMultiplexer.Connect("redis:6379");
+var connRedis = ConnectionMultiplexer.Connect("redis:6379,abortConnect=false");
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(connRedis);
 
@@ -29,7 +29,9 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
 });
 
 builder.Services.AddScoped<IUsuarioService,UsuarioService>();
-builder.Services.AddScoped<IUsuarioRepository,UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IMesaService, MesaService>();
+builder.Services.AddScoped<IMesaRepository, MesaRepository>();
 
 
 builder.Services.AddAuthentication(c => {

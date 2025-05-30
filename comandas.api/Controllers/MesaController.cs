@@ -1,12 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Comandas.Shared.DTOs;
-using Comandas.Data;
-using Comandas.Domain;
 using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Comandas.Services.Implementation;
-using StackExchange.Redis;
+using Comandas.Services.Interfaces;
 
 
 namespace Comandas.API.Controllers
@@ -17,10 +13,10 @@ namespace Comandas.API.Controllers
     public class MesaController:ControllerBase
     {
 
-        public readonly MesaServices _mesaServices;
+        public readonly IMesaService _mesaServices;
 
-        public MesaController(MesaServices mesaServices){
-            _mesaServices = mesaServices;
+        public MesaController(IMesaService mesaService){
+            _mesaServices = mesaService;
         }
 
 

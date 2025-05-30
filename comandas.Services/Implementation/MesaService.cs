@@ -4,11 +4,11 @@ using Comandas.Shared.DTOs;
 
 namespace Comandas.Services.Implementation;
 
-public class MesaServices : IMesaService
+public class MesaService : IMesaService
 {
     private readonly IMesaRepository _mesaRepository;
     
-    public MesaServices(IMesaRepository mesaRepository)
+    public MesaService(IMesaRepository mesaRepository)
     {
         _mesaRepository = mesaRepository;
     }
