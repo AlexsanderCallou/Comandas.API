@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using Comandas.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddScoped<IUsuarioService,UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IMesaService, MesaService>();
 builder.Services.AddScoped<IMesaRepository, MesaRepository>();
+builder.Services.AddScoped<ICardapioItemService, CardapioItemService>();
+builder.Services.AddScoped<ICardapioItemRepository, CardapioItemRepository>();
 
 
 builder.Services.AddAuthentication(c => {
@@ -50,28 +53,30 @@ builder.Services.AddAuthentication(c => {
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(i => {
-    i.AddSecurityRequirement(new OpenApiSecurityRequirement{
-        {
-            new OpenApiSecurityScheme{
-                Reference = new OpenApiReference{
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()  
-        }
-    });
-    i.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
-        Description =   "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
-                        "Digite 'Bearer' [espaço] e então seu token no campo abaixo.\r\n\r\n" +
-                        "Exemplo (informar sem as aspas): 'Bearer 12345abcdef'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT"
-    });
-});
+                                i.AddSecurityRequirement(new OpenApiSecurityRequirement
+                                {
+                                    {
+                                        new OpenApiSecurityScheme{
+                                            Reference = new OpenApiReference{
+                                                Type = ReferenceType.SecurityScheme,
+                                                Id = "Bearer"
+                                            }
+                                        },
+                                        Array.Empty<string>()  
+                                    }
+                                });
+                                i.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme
+                                {
+                                    Description =   "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
+                                                    "Digite 'Bearer' [espaço] e então seu token no campo abaixo.\r\n\r\n" +
+                                                    "Exemplo (informar sem as aspas): 'Bearer 12345abcdef'",
+                                    Name = "Authorization",
+                                    In = ParameterLocation.Header,
+                                    Type = SecuritySchemeType.ApiKey,
+                                    Scheme = "Bearer",
+                                    BearerFormat = "JWT"
+                                });
+                                });
 
 
 
@@ -82,12 +87,11 @@ var app = builder.Build();
 
 
 //continuar a aula a partir da aqui, na criação do escopo.
-using(var escopo = app.Services.CreateScope()){
-
+using (var escopo = app.Services.CreateScope())
+{
     var contexto = escopo.ServiceProvider.GetRequiredService<ComandasDBContext>();
     await contexto.Database.MigrateAsync();
     InicializarDados.Semear(contexto);
-
 }
 
 
