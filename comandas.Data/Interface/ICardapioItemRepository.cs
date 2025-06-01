@@ -1,6 +1,6 @@
 using Comandas.Shared.DTOs;
 
-namespace Comandas.Data.Interfaces
+namespace Comandas.Data.Interface
 {
     public interface ICardapioItemRepository
     {

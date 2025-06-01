@@ -1,4 +1,7 @@
-namespace Comandas.Services.Interfaces
+namespace Comandas.Services.Interface
 {
-    
+    public interface IPedidoCozinhaService
+    {
+        
+    }
 }

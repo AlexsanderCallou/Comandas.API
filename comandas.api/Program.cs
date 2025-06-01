@@ -1,9 +1,5 @@
 
 using System.Text;
-using Comandas.Data.Implementation;
-using Comandas.Data.Interface;
-using Comandas.Services.Implementation;
-using Comandas.Services.Interfaces;
 using Comandas.Data;
 using Comandas.API.DataBase;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using Comandas.Data.Interfaces;
+using Comandas.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,12 +25,7 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
     config.EnableSensitiveDataLogging();
 });
 
-builder.Services.AddScoped<IUsuarioService,UsuarioService>();
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<IMesaService, MesaService>();
-builder.Services.AddScoped<IMesaRepository, MesaRepository>();
-builder.Services.AddScoped<ICardapioItemService, CardapioItemService>();
-builder.Services.AddScoped<ICardapioItemRepository, CardapioItemRepository>();
+builder.Services.RegisterServiceRegistration();
 
 
 builder.Services.AddAuthentication(c => {

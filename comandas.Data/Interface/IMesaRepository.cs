@@ -1,6 +1,6 @@
 using Comandas.Shared.DTOs;
 
-namespace Comandas.Data.Implementation
+namespace Comandas.Data.Interface
 {
 
     public interface IMesaRepository

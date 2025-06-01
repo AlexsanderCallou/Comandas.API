@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 using Comandas.Services.Implementation;
 using Comandas.Data.Implementation;
-using Comandas.Services.Interfaces;
+using Comandas.Services.Interface;
 
 namespace Comandas.API.Controllers{
 

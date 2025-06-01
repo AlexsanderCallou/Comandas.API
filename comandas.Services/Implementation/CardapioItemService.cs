@@ -1,5 +1,5 @@
-using Comandas.Data.Interfaces;
-using Comandas.Services.Interfaces;
+using Comandas.Data.Interface;
+using Comandas.Services.Interface;
 using Comandas.Shared.DTOs;
 
 namespace Comandas.Services.Implementation

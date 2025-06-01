@@ -1,4 +1,4 @@
-namespace Comandas.Data.Implementation
+namespace Comandas.Data.Interface
 {
 
     public interface IRedisRepository

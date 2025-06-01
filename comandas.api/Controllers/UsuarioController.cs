@@ -3,13 +3,12 @@ using System.Security.Claims;
 using System.Text;
 using Comandas.Data;
 using Comandas.Shared.DTOs;
-using Comandas.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
-using Comandas.Services.Interfaces;
+using Comandas.Services.Interface;
 
 namespace Comandas.API.Controllers {
 

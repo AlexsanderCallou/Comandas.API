@@ -1,6 +1,7 @@
 using Comandas.Domain;
 using Comandas.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Comandas.Data.Interface;
 
 namespace Comandas.Data.Implementation
 {

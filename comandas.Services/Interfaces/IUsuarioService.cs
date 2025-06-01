@@ -1,7 +1,7 @@
 using System;
 using Comandas.Shared.DTOs;
 
-namespace Comandas.Services.Interfaces;
+namespace Comandas.Services.Interface;
 
 public interface IUsuarioService
 {

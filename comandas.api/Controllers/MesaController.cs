@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Comandas.Shared.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
-using Comandas.Services.Interfaces;
+using Comandas.Services.Interface;
 
 
 namespace Comandas.API.Controllers

@@ -1,6 +1,7 @@
 using System;
+using Comandas.Services.Interface;
 using Comandas.Data.Interface;
-using Comandas.Services.Interfaces;
+
 using Comandas.Shared.DTOs;
 
 namespace Comandas.Services.Implementation;

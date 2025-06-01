@@ -1,4 +1,4 @@
-using Comandas.Data.Interfaces;
+using Comandas.Data.Interface;
 using Comandas.Domain;
 using Comandas.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
