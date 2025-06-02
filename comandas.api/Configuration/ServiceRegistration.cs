@@ -17,6 +17,7 @@ namespace Comandas.API.Configuration
             serviceCollection.AddScoped<ICardapioItemRepository, CardapioItemRepository>();
             serviceCollection.AddScoped<IPedidoCozinhaService, PedidoCozinhaService>();
             serviceCollection.AddScoped<IPedidoCozinhaRepository, PedidoCozinhaRepository>();
+            serviceCollection.AddScoped<IRedisRepository, RedisRepository>();
 
             return serviceCollection;
         }

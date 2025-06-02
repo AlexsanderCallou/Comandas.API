@@ -1,12 +1,7 @@
-using Comandas.Domain;
-using Comandas.Data;
 using Comandas.Shared.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
-using Comandas.Services.Implementation;
-using Comandas.Data.Implementation;
 using Comandas.Services.Interface;
 
 namespace Comandas.API.Controllers{

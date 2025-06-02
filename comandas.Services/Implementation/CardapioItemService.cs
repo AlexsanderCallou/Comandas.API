@@ -7,20 +7,52 @@ namespace Comandas.Services.Implementation
     public class CardapioItemService : ICardapioItemService
     {
         private readonly ICardapioItemRepository _cardapioItemRepository;
+        private readonly IRedisRepository _redisRepository;
 
-        public CardapioItemService(ICardapioItemRepository cardapioItemRepository)
+        public CardapioItemService(ICardapioItemRepository cardapioItemRepository, IRedisRepository redisRepository)
         {
             _cardapioItemRepository = cardapioItemRepository;
+            _redisRepository = redisRepository;
         }
 
-        public Task<CardapioItemGetDTO?> GetCardapioItem(int Id)
+        public async Task<CardapioItemGetDTO?> GetCardapioItem(int Id)
         {
-            return _cardapioItemRepository.GetCardapioItem(Id);
+
+            string chave = $"CardapioItem:{Id}";
+
+            var cardapioCache = await _redisRepository.GetAsync<CardapioItemGetDTO>(chave);
+
+            if (cardapioCache is null)
+            {
+                var response = await _cardapioItemRepository.GetCardapioItem(Id);
+                
+                await _redisRepository.SaveAsync<CardapioItemGetDTO>(chave, response!, TimeSpan.FromMinutes(1));
+
+                return response;
+            }
+
+            return cardapioCache;
+
         }
 
-        public Task<IEnumerable<CardapioItemGetDTO>> GetCardapioItems()
+        public async Task<IEnumerable<CardapioItemGetDTO>> GetCardapioItems()
         {
-            return _cardapioItemRepository.GetCardapioItens();
+
+            string chave = "CardapioItems";
+
+            var cardaiosCache = await _redisRepository.GetAsync<IEnumerable<CardapioItemGetDTO>>(chave);
+
+            if (cardaiosCache is not null)
+            {
+                return cardaiosCache;
+            }
+
+            var response = await _cardapioItemRepository.GetCardapioItens();
+
+            await _redisRepository.SaveAsync<IEnumerable<CardapioItemGetDTO>>(chave, response, TimeSpan.FromMinutes(1));
+
+            return response;
+
         }
 
         public Task<CardapioItemResponsePostDTO> PostCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
