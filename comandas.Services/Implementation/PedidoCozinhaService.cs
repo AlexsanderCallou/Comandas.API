@@ -1,12 +1,26 @@
+using Comandas.Data.Interface;
 using Comandas.Services.Interface;
+using Comandas.Shared.DTOs;
 
 namespace Comandas.Services.Implementation
 {
     public class PedidoCozinhaService : IPedidoCozinhaService
     {
-        public PedidoCozinhaService()
+
+        private readonly IPedidoCozinhaRepository _pedidoCozinhaRepository;
+        public PedidoCozinhaService(IPedidoCozinhaRepository pedidoCozinhaRepository)
         {
-            
+            _pedidoCozinhaRepository = pedidoCozinhaRepository;
+        }
+
+        public Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha)
+        {
+            return _pedidoCozinhaRepository.GetPedidoCozinha(situacaoPedidoCozinha);
+        }
+
+        public Task<bool> PatchPedidoCozinha(int Id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
+        {
+            return _pedidoCozinhaRepository.PatchPedidoCozinha(Id, pedidioCozinhaPatchDTO);
         }
     }
 }

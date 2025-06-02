@@ -12,14 +12,13 @@ namespace Comandas.API.Configuration
             serviceCollection.AddScoped<IUsuarioService, UsuarioService>();
             serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
             serviceCollection.AddScoped<IMesaService, MesaService>();
-            serviceCollection.AddScoped<IMesaRepository, MesaRepository>();
             serviceCollection.AddScoped<ICardapioItemService, CardapioItemService>();
+            serviceCollection.AddScoped<IMesaRepository, MesaRepository>();
             serviceCollection.AddScoped<ICardapioItemRepository, CardapioItemRepository>();
+            serviceCollection.AddScoped<IPedidoCozinhaService, PedidoCozinhaService>();
             serviceCollection.AddScoped<IPedidoCozinhaRepository, PedidoCozinhaRepository>();
 
             return serviceCollection;
-            
         }
-
     }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="comandas_db@localhost" uuid="b30dd1cd-eb0e-4048-a5c0-8ebfb5c7bb2a">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/comandas_db?password=4524&amp;user=adm</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="comandas_db@ep-orange-butterfly-acm14q6g-pooler.sa-east-1.aws.neon.tech" uuid="2742e091-dec6-4eb6-994b-91b26491d979">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-orange-butterfly-acm14q6g-pooler.sa-east-1.aws.neon.tech:5432/comandas_db?password=npg_xkGoNRJLg32l&amp;sslmode=Require&amp;user=neondb_owner</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>

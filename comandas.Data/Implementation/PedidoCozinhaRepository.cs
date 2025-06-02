@@ -14,7 +14,7 @@ namespace Comandas.Data.Implementation
             _banco = comandasDBContext;
         }
 
-        public async Task<PedidoCozinhaGetDTO> GetPedidoCozinha(int Id)
+        public async Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha)
         {
 
             var pedidoCozinha = await _banco.PedidosCozinha
@@ -22,7 +22,7 @@ namespace Comandas.Data.Implementation
                                             .Include(c => c.PedidoCozinhaItems)
                                                 .ThenInclude(c => c.ComandaItem)
                                                     .ThenInclude(c => c.CardapioItem)
-                                            .Where(c => c.SituacaoId == Id)
+                                            .Where(c => c.SituacaoId == situacaoPedidoCozinha)
                                             .Select(c => new PedidoCozinhaGetDTO
                                             {
                                                 Id = c.Id,
@@ -31,18 +31,25 @@ namespace Comandas.Data.Implementation
                                                 TituloItem = c.PedidoCozinhaItems.First().ComandaItem.CardapioItem.Titulo
                                             }).OrderBy(c => c.Id).ToListAsync();
 
-            return null;
-            
+            return pedidoCozinha;
+
         }
 
-        public Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidosCozinha()
+        public async Task<bool> PatchPedidoCozinha(int id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
         {
-            throw new NotImplementedException();
-        }
+            var pedidoCozinha = await _banco.PedidosCozinha.FirstOrDefaultAsync(c => c.Id == id);
 
-        public Task<bool> PatchPedidoCozinha()
-        {
-            throw new NotImplementedException();
+            if (pedidoCozinha is null)
+            {
+                return false;
+            }
+
+            pedidoCozinha.SituacaoId = pedidioCozinhaPatchDTO.SituacaoPedidoCozinhaId;
+
+            await _banco.SaveChangesAsync();
+
+            return true;
+
         }
-    } 
+    }
 }
