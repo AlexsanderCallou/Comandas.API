@@ -6,6 +6,7 @@ namespace Comandas.Services.Interface
     public interface IUsuarioService
     {
         Task<UsuarioGetDTO?> GetUsuario(int id);
+        Task<UsuarioLoginServiceDTO> PostLogin(UsuarioLoginResquestDTO usuarioLoginResquestDTO);
         Task<IEnumerable<UsuarioGetDTO>> GetUsuarios();
         Task<UsuarioPostResponseDTO> PostUsuario(UsuarioPostDTO usuarioPostDTO);
         Task<bool> PutUsuario(UsuarioPutDTO usuarioPutDTO);

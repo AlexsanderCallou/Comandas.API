@@ -17,7 +17,7 @@ public class UsuarioRepository : IUsuarioRepository
 
     public async Task<UsuarioGetDTO?> GetUsuario(int id)
     {
-        var usuario = await _banco
+       return await _banco
                                 .Usuarios
                                 .AsNoTracking()
                                 .Where(b => b.Id == id)
@@ -29,13 +29,22 @@ public class UsuarioRepository : IUsuarioRepository
                                 })
                                 .TagWith("GetUsuario")
                                 .FirstOrDefaultAsync();
+    }
 
-        if (usuario is null)
-        {
-            return default;
-        }
-
-        return usuario;
+    public async Task<UsuarioLoginRepositorytDTO?> GetUsuarioLogin(string email)
+    {
+        return await _banco.Usuarios
+                            .AsNoTracking()
+                            .Where(u => u.Email == email)
+                            .Select(u => new UsuarioLoginRepositorytDTO
+                            {
+                                Id = u.Id,
+                                Nome = u.Nome,
+                                Email = u.Email,
+                                Senha = u.Senha
+                            })
+                            .TagWith("GetUsuarioLogin")
+                            .FirstOrDefaultAsync();   
     }
 
     public async Task<IEnumerable<UsuarioGetDTO>> GetUsuarios()

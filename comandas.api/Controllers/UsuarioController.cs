@@ -17,13 +17,10 @@ namespace Comandas.API.Controllers {
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase{
 
-        public readonly ComandasDBContext _banco;
-
         public readonly IUsuarioService _usuarioService;
 
         public UsuarioController(ComandasDBContext comandasDBContext, IUsuarioService usuarioService){
 
-            _banco = comandasDBContext;
             _usuarioService = usuarioService;
         }
 
@@ -93,37 +90,14 @@ namespace Comandas.API.Controllers {
         [HttpPost("Login")]
         public async Task<ActionResult<UsuarioLoginResponseDTO>> Login(UsuarioLoginResquestDTO usuarioLoginResquestDTO){
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+          
+            var usuario = await _usuarioService.PostLogin(usuarioLoginResquestDTO);
 
-            var key = Encoding.UTF8.GetBytes("3e8acfc238f45a314fd4b2bde272678ad30bd1774743a11dbc5c53ac71ca494b");
-
-            var usuario = await _banco.Usuarios.FirstOrDefaultAsync(c => c.Email == usuarioLoginResquestDTO.Email);
-
-            if (usuario is null) {
-                return NotFound("Usuario/Senha invalidos.");
+            if (!usuario.RetornoSucesso) {
+                return NotFound(usuario.Retorno);
             }
-
-            if (!usuario.Senha.Equals(usuarioLoginResquestDTO.Senha)){
-                return NotFound("Usuario/Senha invalidos.");
-            }
-
             
-            var tokenDescriptor = new SecurityTokenDescriptor{
-                Expires = DateTime.UtcNow.AddHours(1),
-                Subject = new ClaimsIdentity(
-                    new Claim[]{
-                        new Claim(ClaimTypes.Name,usuario.Nome),
-                        new Claim(ClaimTypes.NameIdentifier,usuario.Id.ToString())
-                    }
-                ),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return Ok(new UsuarioLoginResponseDTO{Id = usuario.Id, BearerToken = tokenString});
+            return Ok(usuario.usuarioLoginResponseDTO);
 
         }
     }

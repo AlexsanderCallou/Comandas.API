@@ -15,6 +15,18 @@ namespace Comandas.Services.Implementation
             _redisRepository = redisRepository;
         }
 
+        private async Task<bool> InvalidarCacheCardapioItemById(int Id)
+        {
+            string chave = $"CardapioItem:{Id}";
+
+            return await _redisRepository.RemoveAsync(chave);
+        }
+
+        private async Task<bool> InvalidarCacheCardapioItems()
+        {
+            return await _redisRepository.RemoveAsync("CardapioItems");
+        }
+
         public async Task<CardapioItemGetDTO?> GetCardapioItem(int Id)
         {
 
@@ -25,7 +37,7 @@ namespace Comandas.Services.Implementation
             if (cardapioCache is null)
             {
                 var response = await _cardapioItemRepository.GetCardapioItem(Id);
-                
+
                 await _redisRepository.SaveAsync<CardapioItemGetDTO>(chave, response!, TimeSpan.FromMinutes(1));
 
                 return response;
@@ -55,16 +67,36 @@ namespace Comandas.Services.Implementation
 
         }
 
-        public Task<CardapioItemResponsePostDTO> PostCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
-        {
-            return _cardapioItemRepository.PostCardapioItem(cardapioItemPostDTO);
-        }
-
-        public Task<bool> PutCardapioItem(CardapioItemPutDTO cardapioItemPutDTO)
+        public async Task<CardapioItemResponsePostDTO> PostCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
         {
             try
             {
-                return _cardapioItemRepository.PutCardapioItem(cardapioItemPutDTO);
+                var response = await _cardapioItemRepository.PostCardapioItem(cardapioItemPostDTO); 
+
+                await InvalidarCacheCardapioItems();
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<bool> PutCardapioItem(CardapioItemPutDTO cardapioItemPutDTO)
+        {
+            try
+            {
+                bool response = await _cardapioItemRepository.PutCardapioItem(cardapioItemPutDTO);
+
+                await InvalidarCacheCardapioItemById(cardapioItemPutDTO.Id);
+
+                await InvalidarCacheCardapioItems();
+
+                return response;
+
             }
             catch (Exception ex)
             {
@@ -72,11 +104,20 @@ namespace Comandas.Services.Implementation
             }
         }
 
-        public Task<bool> DeleteCardapioItem(int Id)
+        public async Task<bool> DeleteCardapioItem(int Id)
         {
             try
             {
-                return _cardapioItemRepository.DeleteCardapioItem(Id);
+
+                bool response = await _cardapioItemRepository.DeleteCardapioItem(Id);
+
+                await InvalidarCacheCardapioItemById(Id);
+
+                await InvalidarCacheCardapioItems();
+
+                return response;
+
+
             }
             catch (Exception ex)
             {

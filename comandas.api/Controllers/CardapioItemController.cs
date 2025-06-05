@@ -37,7 +37,7 @@ namespace Comandas.API.Controllers{
         [SwaggerResponse(201, "Cadastra um item no cardapio", typeof(CardapioItemPostDTO))]
         public async Task<ActionResult<CardapioItemPostDTO>> PostCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
         {
-
+        
             var cardapioItem = await _cardapioItemService.PostCardapioItem(cardapioItemPostDTO);
 
             return CreatedAtAction("GetCardapioItem", new { id = cardapioItem.Id }, cardapioItem);

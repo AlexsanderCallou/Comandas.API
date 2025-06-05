@@ -30,7 +30,7 @@ namespace Comandas.API.Controllers
         public async Task<ActionResult<IEnumerable<PedidoCozinhaGetDTO>>> GetPedidoCozinha([FromQuery] int situacaoPedidoCozinha)
         {
 
-            return Ok(_pedidoCozinhaService.GetPedidoCozinha(situacaoPedidoCozinha));
+            return Ok(await _pedidoCozinhaService.GetPedidoCozinha(situacaoPedidoCozinha));
 
         }
 

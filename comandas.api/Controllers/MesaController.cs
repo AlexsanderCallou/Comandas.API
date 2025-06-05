@@ -4,26 +4,29 @@ using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Comandas.Services.Interface;
 
+//TODO Colocar Cache
 
 namespace Comandas.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class MesaController:ControllerBase
+    public class MesaController : ControllerBase
     {
 
         public readonly IMesaService _mesaServices;
 
-        public MesaController(IMesaService mesaService){
+        public MesaController(IMesaService mesaService)
+        {
             _mesaServices = mesaService;
         }
 
 
 
         [HttpGet("{id}")]
-        [SwaggerResponse(200,"Retorna uma mesa", typeof(MesaGetDTO))]
-        public async Task<ActionResult<MesaGetDTO>> GetMesa(int Id) {
+        [SwaggerResponse(200, "Retorna uma mesa", typeof(MesaGetDTO))]
+        public async Task<ActionResult<MesaGetDTO>> GetMesa(int Id)
+        {
 
             var mesa = await _mesaServices.GetMesa(Id);
 
@@ -32,8 +35,8 @@ namespace Comandas.API.Controllers
                 return NotFound("Usuario não encontrado.");
             }
 
-            return Ok(mesa);    
-        
+            return Ok(mesa);
+
         }
 
         [HttpGet]
@@ -46,21 +49,24 @@ namespace Comandas.API.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(201,"Cria uma mesa", typeof(MesaPostDTO))]
-        public async Task<ActionResult<MesaPostDTO>> PostMesa(MesaPostDTO mesaPostDTO){
+        [SwaggerResponse(201, "Cria uma mesa", typeof(MesaPostDTO))]
+        public async Task<ActionResult<MesaPostDTO>> PostMesa(MesaPostDTO mesaPostDTO)
+        {
 
             Task<MesaResponsePostDTO> mesaResponse = _mesaServices.PostMesa(mesaPostDTO);
 
-            return CreatedAtAction("GetMesa",new{id=mesaResponse.Id},mesaResponse);
+            return CreatedAtAction("GetMesa", new { id = mesaResponse.Id }, mesaResponse);
 
         }
 
         [HttpPut("{id}")]
-        [SwaggerResponse(204,"Altera uma mesa")]
-        [SwaggerResponse(400,"Id da mesa informada não é o mesmo do corpo")]
-        public async Task<ActionResult<MesaPutDTO>> PutMesa(int id, MesaPutDTO mesaPutDTO){
-            
-            if(id != mesaPutDTO.Id){
+        [SwaggerResponse(204, "Altera uma mesa")]
+        [SwaggerResponse(400, "Id da mesa informada não é o mesmo do corpo")]
+        public async Task<ActionResult<MesaPutDTO>> PutMesa(int id, MesaPutDTO mesaPutDTO)
+        {
+
+            if (id != mesaPutDTO.Id)
+            {
                 return BadRequest();
             }
 
@@ -69,20 +75,21 @@ namespace Comandas.API.Controllers
                 return NoContent();
             }
 
-                return UnprocessableEntity();
+            return UnprocessableEntity();
 
         }
 
         [HttpDelete("{id}")]
-        [SwaggerResponse(204,"Exclui uma mesa")]
-        public async Task<ActionResult> DeleteMesa(int Id){
+        [SwaggerResponse(204, "Exclui uma mesa")]
+        public async Task<ActionResult> DeleteMesa(int Id)
+        {
 
             if (await _mesaServices.DeleteMesa(Id))
             {
                 return NoContent();
             }
-            
-                return UnprocessableEntity();
+
+            return UnprocessableEntity();
         }
 
     }
