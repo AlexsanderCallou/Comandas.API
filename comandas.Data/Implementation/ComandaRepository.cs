@@ -1,4 +1,6 @@
+using System.Runtime.CompilerServices;
 using Comandas.Data.Interface;
+using Comandas.Domain;
 using Comandas.Shared.DTOs;
 using Comandas.Shared.DTOs.Item;
 using Comandas.Shared.Enumeration;
@@ -14,12 +16,12 @@ namespace Comandas.Data.Implementation
             _comandasDBContext = comandasDBContext;
         }
 
-        public async Task<ComandaGetDTO?> GetComanda(int Id)
+        public async Task<ComandaGetDTO?> GetComanda(int id)
         {
             return await _comandasDBContext.Comandas
                                         .Include(c => c.ComandaItems)
                                             .ThenInclude(c => c.CardapioItem)
-                                        .Where(c => c.Id == Id)
+                                        .Where(c => c.Id == id)
                                         .Select(c => new ComandaGetDTO
                                         {
                                             Id = c.Id,
@@ -56,9 +58,42 @@ namespace Comandas.Data.Implementation
                             }).ToListAsync();
         }
 
-        public Task<ComandaResponsePostDTO?> PostComanda(ComandaPostDTO comandaPostDTO)
+        public async Task<ComandaResponsePostDTO?> PostComanda(ComandaPostDTO comandaPostDTO)
         {
-            return null;
+            var comandaInsert = new Comanda
+            {
+                NumeroMesa      = comandaPostDTO.NumeroMesa,
+                NomeCliente     = comandaPostDTO.NomeCliente,
+                SituacaoComanda = (int)SituacaoComanda.Aberto
+            };
+
+            await _comandasDBContext.Comandas.AddAsync(comandaInsert);
+
+            var itensInsert = comandaPostDTO.CardapioItens
+                .Select(id => new ComandaItem {
+                    ComandaId      = comandaInsert.Id,
+                    CardapioItemId = id
+                })
+                .ToList();
+
+            await _comandasDBContext.ComandaItems.AddRangeAsync(itensInsert);
+
+            await _comandasDBContext.SaveChangesAsync();
+
+            return new ComandaResponsePostDTO
+            {
+                Id = comandaInsert.Id,
+                NomeCliente = comandaInsert.NomeCliente,
+                NumeroMesa = comandaInsert.NumeroMesa,
+                SituacaoComanda = comandaInsert.SituacaoComanda,
+                ComandaItems = itensInsert.Select(c => new ComandaItemGetDTO
+                                            {
+                                                Id = c.Id,
+                                                CardapioItemId = c.CardapioItemId,
+                                                ComandaId = c.ComandaId,
+                                                Titulo = c.CardapioItem.Titulo
+                                            }).ToList()
+            };
         }
 
         public Task<bool> PutComanda(ComandaPutDTO comandaPutDTO)
