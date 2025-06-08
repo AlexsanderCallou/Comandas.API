@@ -20,11 +20,20 @@ namespace Comandas.Shared.DTOs{
 
     }
 
-    public class ComandaPutDTO{
-       
+    public class ComandaResponsePostDTO
+    {
         public int Id { get; set; }
         public int NumeroMesa { get; set; }
-        public string NomeCliente { get; set; } = default!;      
+        public string NomeCliente { get; set; } = default!;
+        public int SituacaoComanda { get; set; } = 1;      
+        public ICollection<ComandaItemGetDTO> ComandaItems {get;set;} = default!;
+    }
+
+    public class ComandaPutDTO
+    {
+        public int Id { get; set; }
+        public int NumeroMesa { get; set; }
+        public string NomeCliente { get; set; } = default!;
         public List<ComandaItemPutDTO> ComandaItems { get; set; } = [];
     }
 

@@ -203,7 +203,6 @@ namespace Comandas.API.Controllers
             {
                 return BadRequest();
             }
-            ;
 
             var comanda = await _banco.Comandas.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -211,7 +210,7 @@ namespace Comandas.API.Controllers
             {
                 return NotFound("Comanda não encontrada.");
             }
-            ;
+            
 
             //verificar se foi informado uma nova mesa. 
 
@@ -377,7 +376,6 @@ namespace Comandas.API.Controllers
             return NoContent();
 
         }
-
 
 
         [HttpPatch("{id}")]

@@ -1,0 +1,16 @@
+using System.Reflection.Metadata;
+using Comandas.Shared.DTOs;
+
+namespace Comandas.Data.Interface
+{
+    public interface IComandaRepository
+    {
+        Task<ComandaGetDTO?> GetComanda(int id);
+        Task<IEnumerable<ComandaGetDTO?>> GetComandas(int idSituacaoComanda);
+        Task<ComandaResponsePostDTO?> PostComanda(ComandaPostDTO comandaPostDTO);
+        Task<bool> PutComanda(ComandaPutDTO comandaPutDTO);
+        Task<bool> DeleteComanda(int id);
+        Task<bool> PatchComanda(ComandaPatchDTO comandaPatchDTO);
+        Task<bool> GetExisteComanda(int id);
+    }
+}
