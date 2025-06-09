@@ -2,6 +2,7 @@ using Comandas.Domain;
 using Comandas.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Comandas.Data.Interface;
+using Comandas.Shared.Enumeration;
 
 namespace Comandas.Data.Implementation
 {
@@ -92,7 +93,22 @@ namespace Comandas.Data.Implementation
             }
                 return false;
         }
+        //TODO essa regra nao deve funcionar, tem q ver se a mesa existe primeiro, caso contrario sempre retornará null
+        // a nao ser que antes de chamar isso, sempre verificar se a mesa existe.
+        public async Task<bool> MesaDesocupada(int id)
+        {
+            return await _banco.Mesas
+                            .Where(m => m.SituacaoMesa == (int)SituacaoMesa.Disponivel)
+                            .Where(m => m.Id == id)
+                            .AnyAsync();
+        }
 
+        public async Task<bool> MesaExiste(int id)
+        {
+            return await _banco.Mesas
+                .Where(m => m.Id == id)
+                .AnyAsync();
+        }
     }
 
 }

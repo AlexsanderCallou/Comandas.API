@@ -57,4 +57,14 @@ public class MesaService : IMesaService
             throw;
         }
     }
+
+    public Task<bool> MesaDesocupada(int id)
+    {
+        return _mesaRepository.MesaDesocupada(id);
+    }
+
+    public Task<bool> MesaExiste(int id)
+    {
+        return _mesaRepository.MesaExiste(id);
+    }
 }

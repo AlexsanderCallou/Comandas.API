@@ -8,6 +8,7 @@ using Comandas.Shared.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Comandas.Services.Interface;
 
 //TODO 
 
@@ -20,178 +21,60 @@ namespace Comandas.API.Controllers
     [Authorize]
     public class ComandaController : ControllerBase
     {
-
+        private readonly IComandaService _comandaService;
+        private readonly IMesaService _mesaService;
         private readonly ILogger<ComandaController> _logger;
-
         private readonly ComandasDBContext _banco;
 
-        public ComandaController(ComandasDBContext comandasDBContext, ILogger<ComandaController> logger)
+        public ComandaController(ComandasDBContext comandasDBContext,
+                                ILogger<ComandaController> logger,
+                                IComandaService comandaService,
+                                IMesaService mesaService)
         {
             _banco = comandasDBContext;
             _logger = logger;
-
+            _comandaService = comandaService;
+            _mesaService = mesaService;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ComandaGetDTO>> GetComanda(int id)
         {
-
-            var comanda = await _banco.Comandas
-                                .Include(c => c.ComandaItems)
-                                    .ThenInclude(c => c.CardapioItem)
-                                .FirstOrDefaultAsync(c => c.Id == id);
-
-
-            if (comanda is null)
-            {
-                return NotFound("Comanda não encontrada.");
-            }
-
-            _logger.LogInformation("Comanda Consultada: {comanda.id}", comanda.Id);
-
-            var comandaGetDTO = new ComandaGetDTO
-            {
-                Id = comanda.Id,
-                NomeCliente = comanda.NomeCliente,
-                NumeroMesa = comanda.NumeroMesa,
-                SituacaoComanda = comanda.SituacaoComanda,
-                ComandaItems = comanda.ComandaItems.Select(c => new ComandaItemGetDTO
-                {
-                    Id = c.Id,
-                    Titulo = c.CardapioItem.Titulo
-                }).ToList()
-            };
-
-            return Ok(comandaGetDTO);
+            return Ok(_comandaService.GetComanda(id));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ComandaGetDTO>>> GetComandas([FromQuery] ComandaFilterDTO comandaFilterDTO)
         {
-
-            var query = _banco.Comandas.AsQueryable();
-
-            if (comandaFilterDTO.SituacaoComanda.HasValue)
+            if (comandaFilterDTO.SituacaoComanda is null)
             {
-                query = query.Where(c => c.SituacaoComanda == comandaFilterDTO.SituacaoComanda);
+                return BadRequest("Deve-se informar a situação das comandas.");
             }
-
-            var comandas = await query.Select(c => new ComandaGetDTO
-            {
-                Id = c.Id,
-                NumeroMesa = c.NumeroMesa,
-                NomeCliente = c.NomeCliente,
-                SituacaoComanda = c.SituacaoComanda,
-
-                ComandaItems = c.ComandaItems
-                            .Select(c => new ComandaItemGetDTO
-                            {
-                                Id = c.Id,
-                                Titulo = c.CardapioItem.Titulo
-                            }).ToList()
-            }).ToListAsync();
-
-
-            return Ok(comandas);
-
-
+            return Ok(await _comandaService.GetComandas((int)comandaFilterDTO.SituacaoComanda));
         }
 
         [HttpPost]
         public async Task<ActionResult<ComandaGetDTO>> PostComanda(ComandaPostDTO comandaPostDTO)
         {
 
-            //verificar se a mesa esta disponivel
-
-            var mesa = await _banco.Mesas.FirstOrDefaultAsync(c => c.NumeroMesa == comandaPostDTO.NumeroMesa);
-
-            if (mesa is null)
+            if (await _mesaService.MesaExiste(comandaPostDTO.NumeroMesa))
             {
                 return BadRequest("Mesa não encontrada.");
             }
 
-            if (mesa.SituacaoMesa == (int)SituacaoMesa.Ocupada)
+            if (!await _mesaService.MesaDesocupada(comandaPostDTO.NumeroMesa))
             {
-                return BadRequest($"Mesa {mesa.NumeroMesa} esta ocupada.");
+                return BadRequest($"Mesa {comandaPostDTO.NumeroMesa} esta ocupada.");
             }
 
-            mesa.SituacaoMesa = (int)SituacaoMesa.Ocupada;
+            var comandaInsert = await _comandaService.PostComanda(comandaPostDTO);
 
-            //criar nova comanda.
-
-            var comanda = new Comanda
+            if (comandaInsert is null)
             {
-                NumeroMesa = comandaPostDTO.NumeroMesa,
-                NomeCliente = comandaPostDTO.NomeCliente,
-            };
-
-            //salvar no contexto.
-
-            await _banco.Comandas.AddAsync(comanda);
-
-            //adcionar os itens.
-
-            foreach (var item in comandaPostDTO.CardapioItens)
-            {
-
-                var cardapioItem = await _banco.CardapioItems.FirstOrDefaultAsync(c => c.Id == item);
-
-                if (cardapioItem is null)
-                {
-                    return BadRequest("Item não existe.");
-                }
-
-                var comandaItem = new ComandaItem
-                {
-                    CardapioItem = cardapioItem,
-                    Comanda = comanda
-                };
-
-                await _banco.ComandaItems.AddAsync(comandaItem);
-
-                if (cardapioItem.PossuiPreparo)
-                {
-                    var pedidoCozinha = new PedidoCozinha
-                    {
-                        Comanda = comanda,
-                        SituacaoId = (int)SituacaoPedidoCozinha.Pendente,
-                    };
-
-                    var pedidoCozinhaItem = new PedidoCozinhaItem
-                    {
-                        PedidoCozinha = pedidoCozinha,
-                        ComandaItem = comandaItem
-                    };
-
-                    await _banco.PedidosCozinha.AddAsync(pedidoCozinha);
-                    await _banco.PedidoCozinhaItems.AddAsync(pedidoCozinhaItem);
-
-                }
+                return BadRequest("Comanda não foi salva.");
             }
-            ;
 
-            //salvar no banco.
-
-            await _banco.SaveChangesAsync();
-
-            //criar um novo comanda dto
-
-            var comandaGetDTO = new ComandaGetDTO
-            {
-                Id = comanda.Id,
-                NomeCliente = comanda.NomeCliente,
-                NumeroMesa = comanda.NumeroMesa,
-                SituacaoComanda = comanda.SituacaoComanda,
-                ComandaItems = comanda.ComandaItems.Select(c => new ComandaItemGetDTO
-                {
-                    Id = c.Id,
-                    CardapioItemId = c.CardapioItemId,
-                    ComandaId = c.ComandaId,
-                    Titulo = c.CardapioItem.Titulo
-                }).ToList()
-            };
-
-            return CreatedAtAction("GetComanda", new { id = comanda.Id }, comandaGetDTO);
+            return CreatedAtAction("GetComanda", new { id = comandaInsert.Id }, comandaInsert);
 
         }
 
@@ -210,7 +93,7 @@ namespace Comandas.API.Controllers
             {
                 return NotFound("Comanda não encontrada.");
             }
-            
+
 
             //verificar se foi informado uma nova mesa. 
 
