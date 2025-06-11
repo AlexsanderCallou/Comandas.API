@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\comandas.Domain\comandas.Domain.csproj" />
-    <ProjectReference Include="..\comandas.Shared\comandas.Shared.csproj" />
-    <ProjectReference Include="..\comandas.Data\comandas.Data.csproj" />
+    <ProjectReference Include="..\2_comandas.Domain\comandas.Domain.csproj" />
+    <ProjectReference Include="..\5_comandas.Shared\comandas.Shared.csproj" />
+    <ProjectReference Include="..\4_comandas.Data\comandas.Data.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -21,13 +21,10 @@ namespace Comandas.API.Controllers
             _mesaServices = mesaService;
         }
 
-
-
         [HttpGet("{id}")]
         [SwaggerResponse(200, "Retorna uma mesa", typeof(MesaGetDTO))]
         public async Task<ActionResult<MesaGetDTO>> GetMesa(int Id)
         {
-
             var mesa = await _mesaServices.GetMesa(Id);
 
             if (mesa is null)
@@ -36,27 +33,22 @@ namespace Comandas.API.Controllers
             }
 
             return Ok(mesa);
-
         }
 
         [HttpGet]
         [SwaggerResponse(200, "Retorna uma lista de mesas.", typeof(IEnumerable<MesaGetDTO>))]
         public async Task<ActionResult<IEnumerable<MesaGetDTO>>> GetMesas()
         {
-
             return Ok(await _mesaServices.GetMesas());
-
         }
 
         [HttpPost]
         [SwaggerResponse(201, "Cria uma mesa", typeof(MesaPostDTO))]
         public async Task<ActionResult<MesaPostDTO>> PostMesa(MesaPostDTO mesaPostDTO)
         {
-
             Task<MesaResponsePostDTO> mesaResponse = _mesaServices.PostMesa(mesaPostDTO);
 
             return CreatedAtAction("GetMesa", new { id = mesaResponse.Id }, mesaResponse);
-
         }
 
         [HttpPut("{id}")]

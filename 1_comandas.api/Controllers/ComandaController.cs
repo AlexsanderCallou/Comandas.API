@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comandas.Services.Interface;
 
-//TODO 
-
 namespace Comandas.API.Controllers
 {
 
@@ -57,7 +55,7 @@ namespace Comandas.API.Controllers
         public async Task<ActionResult<ComandaGetDTO>> PostComanda(ComandaPostDTO comandaPostDTO)
         {
 
-            if (await _mesaService.MesaExiste(comandaPostDTO.NumeroMesa))
+            if (!await _mesaService.MesaExiste(comandaPostDTO.NumeroMesa))
             {
                 return BadRequest("Mesa não encontrada.");
             }
@@ -66,6 +64,8 @@ namespace Comandas.API.Controllers
             {
                 return BadRequest($"Mesa {comandaPostDTO.NumeroMesa} esta ocupada.");
             }
+
+            //TODO validar se os ids dos itens do cardapio existem
 
             var comandaInsert = await _comandaService.PostComanda(comandaPostDTO);
 

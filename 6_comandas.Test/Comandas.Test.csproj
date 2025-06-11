@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\comandas.api\comandas.api.csproj" />
+    <ProjectReference Include="..\1_comandas.api\comandas.api.csproj" />
   </ItemGroup>
 
 </Project>

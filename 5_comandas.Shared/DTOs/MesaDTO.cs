@@ -1,4 +1,5 @@
-namespace Comandas.Shared.DTOs {
+namespace Comandas.Shared.DTOs 
+{
 
     public class MesaGetDTO
     {

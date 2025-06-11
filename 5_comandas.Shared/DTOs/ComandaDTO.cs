@@ -1,23 +1,22 @@
 using Comandas.Shared.DTOs.Item;
 
-namespace Comandas.Shared.DTOs{
+namespace Comandas.Shared.DTOs
+{
 
-    public class ComandaGetDTO{
-
+    public class ComandaGetDTO
+    {
         public int Id { get; set; }
         public int NumeroMesa { get; set; }
         public string NomeCliente { get; set; } = default!;
         public int SituacaoComanda { get; set; } = 1;      
         public ICollection<ComandaItemGetDTO> ComandaItems {get;set;} = default!;
-
     }
 
-    public class ComandaPostDTO{
-
+    public class ComandaPostDTO
+    {
         public int NumeroMesa { get; set; }
         public string NomeCliente { get; set; } = default!;
         public int[] CardapioItens { get; set; } = [];
-
     }
 
     public class ComandaResponsePostDTO
@@ -37,11 +36,13 @@ namespace Comandas.Shared.DTOs{
         public List<ComandaItemPutDTO> ComandaItems { get; set; } = [];
     }
 
-    public class ComandaPatchDTO{
+    public class ComandaPatchDTO
+    {
         public int SituacaoComanda { get; set; }
     }
 
-    public class ComandaFilterDTO{
+    public class ComandaFilterDTO
+    {
         public int? SituacaoComanda { get; set; }
     }
 

@@ -35,9 +35,9 @@
   <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\comandas.Domain\comandas.Domain.csproj" />
-    <ProjectReference Include="..\comandas.Services\comandas.Services.csproj" />
-    <ProjectReference Include="..\comandas.Shared\comandas.Shared.csproj" />
+    <ProjectReference Include="..\2_comandas.Domain\comandas.Domain.csproj" />
+    <ProjectReference Include="..\3_comandas.Services\comandas.Services.csproj" />
+    <ProjectReference Include="..\5_comandas.Shared\comandas.Shared.csproj" />
   </ItemGroup>
 
 </Project>

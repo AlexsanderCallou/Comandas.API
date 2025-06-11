@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Comandas.Data.Interface;
 using Comandas.Domain;
@@ -5,6 +6,7 @@ using Comandas.Shared.DTOs;
 using Comandas.Shared.DTOs.Item;
 using Comandas.Shared.Enumeration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Comandas.Data.Implementation
 {
@@ -58,42 +60,11 @@ namespace Comandas.Data.Implementation
                             }).ToListAsync();
         }
 
-        public async Task<ComandaResponsePostDTO?> PostComanda(ComandaPostDTO comandaPostDTO)
+        public async Task<bool> PostComanda(Comanda comanda)
         {
-            var comandaInsert = new Comanda
-            {
-                NumeroMesa      = comandaPostDTO.NumeroMesa,
-                NomeCliente     = comandaPostDTO.NomeCliente,
-                SituacaoComanda = (int)SituacaoComanda.Aberto
-            };
+            await _comandasDBContext.Comandas.AddAsync(comanda);
 
-            await _comandasDBContext.Comandas.AddAsync(comandaInsert);
-
-            var itensInsert = comandaPostDTO.CardapioItens
-                .Select(id => new ComandaItem {
-                    ComandaId      = comandaInsert.Id,
-                    CardapioItemId = id
-                })
-                .ToList();
-
-            await _comandasDBContext.ComandaItems.AddRangeAsync(itensInsert);
-
-            await _comandasDBContext.SaveChangesAsync();
-
-            return new ComandaResponsePostDTO
-            {
-                Id = comandaInsert.Id,
-                NomeCliente = comandaInsert.NomeCliente,
-                NumeroMesa = comandaInsert.NumeroMesa,
-                SituacaoComanda = comandaInsert.SituacaoComanda,
-                ComandaItems = itensInsert.Select(c => new ComandaItemGetDTO
-                                            {
-                                                Id = c.Id,
-                                                CardapioItemId = c.CardapioItemId,
-                                                ComandaId = c.ComandaId,
-                                                Titulo = c.CardapioItem.Titulo
-                                            }).ToList()
-            };
+            return true;
         }
 
         public Task<bool> PutComanda(ComandaPutDTO comandaPutDTO)
