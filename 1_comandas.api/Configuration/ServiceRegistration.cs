@@ -11,12 +11,21 @@ namespace Comandas.API.Configuration
         {
             serviceCollection.AddScoped<IUsuarioService, UsuarioService>();
             serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
             serviceCollection.AddScoped<IMesaService, MesaService>();
-            serviceCollection.AddScoped<ICardapioItemService, CardapioItemService>();
             serviceCollection.AddScoped<IMesaRepository, MesaRepository>();
+
+            serviceCollection.AddScoped<ICardapioItemService, CardapioItemService>();
             serviceCollection.AddScoped<ICardapioItemRepository, CardapioItemRepository>();
+
             serviceCollection.AddScoped<IPedidoCozinhaService, PedidoCozinhaService>();
             serviceCollection.AddScoped<IPedidoCozinhaRepository, PedidoCozinhaRepository>();
+
+            serviceCollection.AddScoped<IComandaItemRepository, ComandaItemRepository>();
+
+            serviceCollection.AddScoped<IComandaService, ComandaService>();
+            serviceCollection.AddScoped<IComandaRepository, ComandaRepository>();
+
             serviceCollection.AddScoped<IRedisRepository, RedisRepository>();
 
             return serviceCollection;

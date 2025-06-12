@@ -105,5 +105,24 @@ namespace Comandas.Data.Implementation
             }
             return false;
         }
+
+        public async Task AdicionaCardapiosItens(List<CardapioItem> cardapioItems)
+        {
+            await _banco.CardapioItems.AddRangeAsync(cardapioItems);
+        }
+
+        public async Task<CardapioItem?> ReturnCardapioItem(int Id)
+        {
+            var response = await _banco.CardapioItems
+                                        .Where(c => c.Id == Id)
+                                        .TagWith("GetCardapioItem")
+                                        .FirstOrDefaultAsync();
+
+            if (response is null)
+            {
+                return default;
+            }
+            return response;
+        }
     }
 }

@@ -38,7 +38,12 @@ namespace Comandas.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ComandaGetDTO>> GetComanda(int id)
         {
-            return Ok(_comandaService.GetComanda(id));
+            var getComanda = await _comandaService.GetComanda(id);
+            if (getComanda is null)
+            {
+                return NotFound("Comanda não encontrada.");
+            }
+            return Ok(getComanda);
         }
 
         [HttpGet]
@@ -55,26 +60,14 @@ namespace Comandas.API.Controllers
         public async Task<ActionResult<ComandaGetDTO>> PostComanda(ComandaPostDTO comandaPostDTO)
         {
 
-            if (!await _mesaService.MesaExiste(comandaPostDTO.NumeroMesa))
-            {
-                return BadRequest("Mesa não encontrada.");
-            }
-
-            if (!await _mesaService.MesaDesocupada(comandaPostDTO.NumeroMesa))
-            {
-                return BadRequest($"Mesa {comandaPostDTO.NumeroMesa} esta ocupada.");
-            }
-
-            //TODO validar se os ids dos itens do cardapio existem
-
             var comandaInsert = await _comandaService.PostComanda(comandaPostDTO);
 
-            if (comandaInsert is null)
+            if (!comandaInsert.Success)
             {
-                return BadRequest("Comanda não foi salva.");
+                return BadRequest(comandaInsert.Message);
             }
 
-            return CreatedAtAction("GetComanda", new { id = comandaInsert.Id }, comandaInsert);
+            return CreatedAtAction("GetComanda", new { id = comandaInsert.Data!.Id}, comandaInsert);
 
         }
 

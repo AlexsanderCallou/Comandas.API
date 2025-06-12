@@ -13,5 +13,6 @@ namespace Comandas.Data.Interface
         Task<bool> DeleteComanda(int id);
         Task<bool> PatchComanda(ComandaPatchDTO comandaPatchDTO);
         Task<bool> GetExisteComanda(int id);
+        Task SaveChangesAsync();
     }
 }

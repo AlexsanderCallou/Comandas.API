@@ -71,7 +71,7 @@ namespace Comandas.Services.Implementation
         {
             try
             {
-                var response = await _cardapioItemRepository.PostCardapioItem(cardapioItemPostDTO); 
+                var response = await _cardapioItemRepository.PostCardapioItem(cardapioItemPostDTO);
 
                 await InvalidarCacheCardapioItems();
 
@@ -117,12 +117,12 @@ namespace Comandas.Services.Implementation
 
                 return response;
 
-
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
+
     }
 }

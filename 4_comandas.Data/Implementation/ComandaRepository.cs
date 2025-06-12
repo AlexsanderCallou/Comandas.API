@@ -94,5 +94,9 @@ namespace Comandas.Data.Implementation
                                         }).AnyAsync();
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _comandasDBContext.SaveChangesAsync();
+        }
     }
 }

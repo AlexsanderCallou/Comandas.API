@@ -1,15 +1,15 @@
 namespace Comandas.Shared.DTOs
 {
-    public class ServiceResponse<T>
+    public class ServiceResponseDTO<T>
     {
         public bool Success { get; set; }
         public string? Message { get; set; }
         public T? Data { get; set; }
         public List<string>? Errors { get; set; }
 
-        public static ServiceResponse<T> Ok(T data, string? message = null)
+        public static ServiceResponseDTO<T> Ok(T data, string? message = null)
         {
-            return new ServiceResponse<T>
+            return new ServiceResponseDTO<T>
             {
                 Success = true,
                 Message = message,
@@ -17,9 +17,9 @@ namespace Comandas.Shared.DTOs
             };
         }
 
-        public static ServiceResponse<T> Fail(string message, List<string>? errors = null)
+        public static ServiceResponseDTO<T> Fail(string message, List<string>? errors = null)
         {
-            return new ServiceResponse<T>
+            return new ServiceResponseDTO<T>
             {
                 Success = false,
                 Message = message,
@@ -27,9 +27,9 @@ namespace Comandas.Shared.DTOs
             };
         }
 
-        public static ServiceResponse<T> Fail(List<string> errors)
+        public static ServiceResponseDTO<T> Fail(List<string> errors)
         {
-            return new ServiceResponse<T>
+            return new ServiceResponseDTO<T>
             {
                 Success = false,
                 Errors = errors
