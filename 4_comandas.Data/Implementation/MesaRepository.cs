@@ -17,7 +17,7 @@ namespace Comandas.Data.Implementation
             _banco = comandasDBContext;
         }
 
-        public async Task<MesaGetDTO?> GetMesa(int Id)
+        public async Task<MesaGetDTO?> ReturnMesa(int Id)
         {
             var mesa = await _banco.Mesas
                                 .Where(m => m.Id == Id)
@@ -36,7 +36,7 @@ namespace Comandas.Data.Implementation
             return mesa;             
         }
 
-        public async Task<IEnumerable<MesaGetDTO>> GetMesas()
+        public async Task<IEnumerable<MesaGetDTO>> ReturnMesas()
         {
             return await _banco.Mesas
                                 .AsNoTracking()
@@ -50,7 +50,7 @@ namespace Comandas.Data.Implementation
                                 .ToListAsync();
         }
 
-        public async Task<MesaResponsePostDTO> PostMesa(MesaPostDTO mesaPostDTO)
+        public async Task<MesaResponsePostDTO> CreateMesa(MesaPostDTO mesaPostDTO)
         {
             var mesa = new Mesa
             {
@@ -70,7 +70,7 @@ namespace Comandas.Data.Implementation
             };
         }
 
-        public async Task<bool> PutMesa(MesaPutDTO mesaPutDTO)
+        public async Task<bool> AtualizaMesa(MesaPutDTO mesaPutDTO)
         {
             var mesa = await _banco.Mesas
                                     .Where(m => m.Id == mesaPutDTO.Id)
@@ -95,7 +95,7 @@ namespace Comandas.Data.Implementation
         }
         //TODO essa regra nao deve funcionar, tem q ver se a mesa existe primeiro, caso contrario sempre retornará null
         // a nao ser que antes de chamar isso, sempre verificar se a mesa existe.
-        public async Task<bool> MesaDesocupada(int id)
+        public async Task<bool> ReturnMesaDesocupada(int id)
         {
             return await _banco.Mesas
                             .Where(m => m.SituacaoMesa == (int)SituacaoMesa.Disponivel)
@@ -103,11 +103,18 @@ namespace Comandas.Data.Implementation
                             .AnyAsync();
         }
 
-        public async Task<bool> MesaExiste(int id)
+        public async Task<bool> ReturnMesaExiste(int id)
         {
             return await _banco.Mesas
                 .Where(m => m.Id == id)
                 .AnyAsync();
+        }
+
+        public async Task<Mesa?> ReturnMesaByNumMesa(int numeroMesa)
+        {
+            return await _banco.Mesas
+                                .Where(m => m.NumeroMesa == numeroMesa)
+                                .FirstOrDefaultAsync();
         }
     }
 

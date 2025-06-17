@@ -6,13 +6,12 @@ namespace Comandas.Data.Interface
 {
     public interface IComandaRepository
     {
-        Task<ComandaGetDTO?> GetComanda(int id);
-        Task<IEnumerable<ComandaGetDTO?>> GetComandas(int idSituacaoComanda);
-        Task<bool> PostComanda(Comanda comanda);
-        Task<bool> PutComanda(ComandaPutDTO comandaPutDTO);
+        Task<ComandaGetDTO?> ReturnComandaDTO(int id);
+        Task<IEnumerable<ComandaGetDTO?>> ReturnListComandasDTO(int idSituacaoComanda);
+        Task<bool> CreateComanda(Comanda comanda);
         Task<bool> DeleteComanda(int id);
-        Task<bool> PatchComanda(ComandaPatchDTO comandaPatchDTO);
-        Task<bool> GetExisteComanda(int id);
+        Task<bool> ExisteComanda(int id);
         Task SaveChangesAsync();
+        Task<Comanda> ReturnComanda(int id);
     }
 }

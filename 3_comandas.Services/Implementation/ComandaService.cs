@@ -4,6 +4,7 @@ using Comandas.Shared.DTOs;
 using Comandas.Shared.DTOs.Item;
 using Comandas.Domain;
 using Comandas.Shared.Enumeration;
+using Microsoft.Extensions.Logging;
 
 namespace Comandas.Services.Implementation
 {
@@ -14,40 +15,46 @@ namespace Comandas.Services.Implementation
         private readonly ICardapioItemService _cardapioItemService;
         private readonly ICardapioItemRepository _cardapioItemRepository;
         private readonly IComandaItemRepository _comandaItemRepository;
+        private readonly IPedidoCozinhaRepository _pedidoCozinhaRepository;
+        private readonly ILogger<ComandaService> _logger;
         public ComandaService(IComandaRepository comandaRepository,
                                 IMesaRepository mesaRepository,
                                 ICardapioItemService cardapioItemService,
                                 IComandaItemRepository comandaItemRepository,
-                                ICardapioItemRepository cardapioItemRepository)
+                                ICardapioItemRepository cardapioItemRepository,
+                                IPedidoCozinhaRepository pedidoCozinhaRepository,
+                                ILogger<ComandaService> logger)
         {
             _comandaRepository = comandaRepository;
             _mesaRepository = mesaRepository;
             _cardapioItemService = cardapioItemService;
             _comandaItemRepository = comandaItemRepository;
             _cardapioItemRepository = cardapioItemRepository;
+            _pedidoCozinhaRepository = pedidoCozinhaRepository;
+            _logger = logger;
         }
         public Task<bool> GetExisteComanda(int id)
         {
-            return _comandaRepository.GetExisteComanda(id);
+            return _comandaRepository.ExisteComanda(id);
         }
         public Task<ComandaGetDTO?> GetComanda(int id)
         {
-            return _comandaRepository.GetComanda(id);
+            return _comandaRepository.ReturnComandaDTO(id);
         }
         public Task<IEnumerable<ComandaGetDTO?>> GetComandas(int idSituacaoComanda)
         {
-            return _comandaRepository.GetComandas(idSituacaoComanda);
+            return _comandaRepository.ReturnListComandasDTO(idSituacaoComanda);
         }
         public async Task<ServiceResponseDTO<ComandaResponsePostDTO>> PostComanda(ComandaPostDTO comandaPostDTO)
         {
-            
-            if (!await _mesaRepository.MesaExiste(comandaPostDTO.NumeroMesa))
+
+            if (!await _mesaRepository.ReturnMesaExiste(comandaPostDTO.NumeroMesa))
             {
                 return ServiceResponseDTO<ComandaResponsePostDTO>.Fail("Mesa não existe.");
             }
 
-            if (!await _mesaRepository.MesaDesocupada(comandaPostDTO.NumeroMesa))
-            {           
+            if (!await _mesaRepository.ReturnMesaDesocupada(comandaPostDTO.NumeroMesa))
+            {
                 return ServiceResponseDTO<ComandaResponsePostDTO>.Fail("Mesa ocupada.");
             }
 
@@ -66,7 +73,7 @@ namespace Comandas.Services.Implementation
                 SituacaoComanda = (int)SituacaoComanda.Aberto
             };
 
-            await _comandaRepository.PostComanda(comandaInsert);
+            await _comandaRepository.CreateComanda(comandaInsert);
 
             var itensInsert = new List<ComandaItem>();
 
@@ -85,32 +92,171 @@ namespace Comandas.Services.Implementation
 
             return ServiceResponseDTO<ComandaResponsePostDTO>
             .Ok(new ComandaResponsePostDTO
-                    {
-                        Id = comandaInsert.Id,
-                        NomeCliente = comandaInsert.NomeCliente,
-                        NumeroMesa = comandaInsert.NumeroMesa,
-                        SituacaoComanda = comandaInsert.SituacaoComanda,
-                        ComandaItems = itensInsert.Select(c => new ComandaItemGetDTO
-                        {
-                            Id = c.Id,
-                            CardapioItemId = c.CardapioItemId,
-                            ComandaId = c.ComandaId,
-                            Titulo = c.CardapioItem.Titulo
-                        }).ToList()
-                    });
+            {
+                Id = comandaInsert.Id,
+                NomeCliente = comandaInsert.NomeCliente,
+                NumeroMesa = comandaInsert.NumeroMesa,
+                SituacaoComanda = comandaInsert.SituacaoComanda,
+                ComandaItems = itensInsert.Select(c => new ComandaItemGetDTO
+                {
+                    Id = c.Id,
+                    CardapioItemId = c.CardapioItemId,
+                    ComandaId = c.ComandaId,
+                    Titulo = c.CardapioItem.Titulo
+                }).ToList()
+            });
         }
 
-        public Task<bool> PutComanda(ComandaPutDTO comandaPutDTO)
+        public async Task<ServiceResponseDTO<bool>> PutComanda(ComandaPutDTO comandaPutDTO)
+        {
+
+            List<ErroResult> errosList = [];
+            var comanda = await _comandaRepository.ReturnComanda(comandaPutDTO.Id);
+
+            if (comanda is null)
+            {
+                errosList.Add(new(404, "Comanda não encontrada"));
+
+                return ServiceResponseDTO<bool>.Fail(errosList);    
+            }
+
+            if (comandaPutDTO.NumeroMesa > 0 && comandaPutDTO.NumeroMesa != comanda.NumeroMesa)
+            {
+
+                var mesa = await _mesaRepository.ReturnMesaByNumMesa(comandaPutDTO.NumeroMesa);
+
+                if (mesa is null)
+                {
+                    errosList.Add(new(404,"Mesa não encontrada"));
+
+                    return ServiceResponseDTO<bool>.Fail(errosList);
+                }
+
+                if (mesa.SituacaoMesa == (int)SituacaoMesa.Ocupada)
+                {
+                    errosList.Add(new(400,$"Mesa {mesa.NumeroMesa} está ocupada."));
+
+                    return ServiceResponseDTO<bool>.Fail(errosList);
+                }
+
+                mesa.SituacaoMesa = (int)SituacaoMesa.Ocupada;
+
+                var mesaAtual = await _mesaRepository.ReturnMesaByNumMesa(comanda.NumeroMesa);
+
+                mesaAtual!.SituacaoMesa = (int)SituacaoMesa.Disponivel;
+
+                comanda.NumeroMesa = mesa.NumeroMesa;
+            }
+
+            //verificar se foi informado um novo nome p o cliente.
+
+            if (!string.IsNullOrEmpty(comandaPutDTO.NomeCliente))
+            {
+                comanda.NomeCliente = comandaPutDTO.NomeCliente;
+            }
+
+            //percorrer os itens da comanda e verificar se eh uma exclusao.
+
+            var itensExcluir = new List<int>();
+
+            itensExcluir = comandaPutDTO.ComandaItems
+                                        .Where(c => c.Excluir)
+                                        .Select(c => c.Id)
+                                        .ToList();
+
+            if (itensExcluir.Any())
+            {
+                var comandaItensExcluir = await _comandaItemRepository.ReturnComandaItens(itensExcluir);
+                if (!comandaItensExcluir.Any())
+                {
+                    errosList.Add(new(400,"Nenhum id de item informado."));
+                    return ServiceResponseDTO<bool>.Fail(errosList);
+                }
+                _comandaItemRepository.DeleteComandaItens(comandaItensExcluir.ToArray());
+            }
+
+
+            //verificar se eh para adicionar um novo item. 
+
+            var idsAdd = new List<int>();
+
+            idsAdd = comandaPutDTO.ComandaItems.Where(c => c.Excluir == false)
+                                                        .Select(c => c.CardapioItemId).ToList();
+
+            if (idsAdd.Any())
+            {
+
+                List<ComandaItem> comandaItens = idsAdd.Select(c =>
+                                                                new ComandaItem
+                                                                {
+                                                                    Comanda = comanda,
+                                                                    CardapioItemId = c
+                                                                }).ToList();
+
+                await _comandaItemRepository.AdicionaComandasItems(comandaItens);
+
+                var pedidoCozinhaItens = new List<PedidoCozinhaItem>();
+
+                foreach (ComandaItem comandaItem in comandaItens)
+                {
+
+                    var cardapioItem = await _cardapioItemRepository.ReturnCardapioItemDTO(comandaItem.CardapioItemId);
+
+                    if (cardapioItem!.PossuiPreparo)
+                    {
+
+                        var pedidoCozinha = new PedidoCozinha
+                        {
+                            Comanda = comanda,
+                            SituacaoId = (int)SituacaoPedidoCozinha.Pendente
+                        };
+
+                        await _pedidoCozinhaRepository.CreatePedidoCozinha(pedidoCozinha);
+
+                        var pedidoCozinhaItem = new PedidoCozinhaItem
+                        {
+                            PedidoCozinha = pedidoCozinha,
+                            ComandaItem = comandaItem
+                        };
+
+                        pedidoCozinhaItens.Add(pedidoCozinhaItem);
+
+                        if (pedidoCozinhaItens.Any())
+                        {
+                            pedidoCozinha.PedidoCozinhaItems = pedidoCozinhaItens;
+                        }
+                    }
+                }
+            }
+
+            //fazer a persistencia dos dados.
+
+            try
+            {
+
+                await _comandaRepository.SaveChangesAsync();
+
+                return ServiceResponseDTO<bool>.Ok(true);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro interno no servidor.");
+                errosList.Add(new(500, "Ouve um erro interno no sistema."));
+                return ServiceResponseDTO<bool>.Fail(errosList);
+            }
+
+        }
+
+        public Task<ServiceResponseDTO<bool>> DeleteComanda(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<bool> PatchComanda(ComandaPatchDTO comandaPatchDTO)
+
+        public Task<ServiceResponseDTO<bool>> PatchComanda(ComandaPatchDTO comandaPatchDTO)
         {
             throw new NotImplementedException();
         }
-        public Task<bool> DeleteComanda(int id)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

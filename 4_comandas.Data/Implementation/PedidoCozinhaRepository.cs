@@ -1,4 +1,5 @@
 using Comandas.Data.Interface;
+using Comandas.Domain;
 using Comandas.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,17 +8,22 @@ namespace Comandas.Data.Implementation
     public class PedidoCozinhaRepository : IPedidoCozinhaRepository
     {
 
-        private readonly ComandasDBContext _banco;
+        private readonly ComandasDBContext comandasDBContext;
 
         public PedidoCozinhaRepository(ComandasDBContext comandasDBContext)
         {
-            _banco = comandasDBContext;
+            this.comandasDBContext = comandasDBContext;
+        }
+
+        public async Task CreatePedidoCozinha(PedidoCozinha pedidoCozinha)
+        {
+            await comandasDBContext.PedidosCozinha.AddAsync(pedidoCozinha);
         }
 
         public async Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha)
         {
 
-            var pedidoCozinha = await _banco.PedidosCozinha
+            var pedidoCozinha = await comandasDBContext.PedidosCozinha
                                             .Include(c => c.Comanda)
                                             .Include(c => c.PedidoCozinhaItems)
                                                 .ThenInclude(c => c.ComandaItem)
@@ -37,7 +43,7 @@ namespace Comandas.Data.Implementation
 
         public async Task<bool> PatchPedidoCozinha(int id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
         {
-            var pedidoCozinha = await _banco.PedidosCozinha.FirstOrDefaultAsync(c => c.Id == id);
+            var pedidoCozinha = await comandasDBContext.PedidosCozinha.FirstOrDefaultAsync(c => c.Id == id);
 
             if (pedidoCozinha is null)
             {
@@ -46,7 +52,7 @@ namespace Comandas.Data.Implementation
 
             pedidoCozinha.SituacaoId = pedidioCozinhaPatchDTO.SituacaoPedidoCozinhaId;
 
-            await _banco.SaveChangesAsync();
+            await comandasDBContext.SaveChangesAsync();
 
             return true;
 

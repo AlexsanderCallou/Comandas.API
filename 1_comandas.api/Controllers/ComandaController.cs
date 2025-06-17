@@ -80,134 +80,13 @@ namespace Comandas.API.Controllers
                 return BadRequest();
             }
 
-            var comanda = await _banco.Comandas.FirstOrDefaultAsync(c => c.Id == id);
-
-            if (comanda is null)
+            var comanda = await _comandaService.PutComanda(comandaPutDTO);
+            //TODO falta ver a questao do retorno code, pois temos uma lista agora. 
+            if (!comanda.Success) 
             {
                 return NotFound("Comanda não encontrada.");
             }
-
-
-            //verificar se foi informado uma nova mesa. 
-
-            if (comandaPutDTO.NumeroMesa > 0 && comandaPutDTO.NumeroMesa != comanda.NumeroMesa)
-            {
-
-                var mesa = await _banco.Mesas.FirstOrDefaultAsync(c => c.NumeroMesa == comandaPutDTO.NumeroMesa);
-
-                if (mesa is null)
-                {
-                    return NotFound("Mesa não encontrada");
-                }
-
-                if (mesa.SituacaoMesa == (int)SituacaoMesa.Ocupada)
-                {
-                    return BadRequest($"Mesa {mesa.NumeroMesa} está ocupada.");
-                }
-
-                mesa.SituacaoMesa = (int)SituacaoMesa.Ocupada;
-
-                var mesaAtual = await _banco.Mesas.FirstOrDefaultAsync(c => c.NumeroMesa == comanda.NumeroMesa);
-
-                mesaAtual!.SituacaoMesa = (int)SituacaoMesa.Disponivel;
-
-                comanda.NumeroMesa = mesa.NumeroMesa;
-
-            }
-
-            //verificar se foi informado um novo nome p o cliente.
-
-            if (!string.IsNullOrEmpty(comandaPutDTO.NomeCliente))
-            {
-
-                comanda.NomeCliente = comandaPutDTO.NomeCliente;
-
-            }
-
-            //percorrer os itens da comanda e verificar se eh uma exclusao.
-
-            var itensExcluir = new List<int>();
-
-            itensExcluir = comandaPutDTO.ComandaItems.Where(c => c.Excluir).Select(c => c.Id).ToList();
-
-            if (itensExcluir.Any())
-            {
-
-                var comandaItensExcluir = await _banco.ComandaItems.Where(c => itensExcluir.Contains(c.Id)).ToListAsync();
-
-                if (!comandaItensExcluir.Any())
-                {
-                    return BadRequest("Nenhum id de item informado.");
-                }
-
-                _banco.ComandaItems.RemoveRange(comandaItensExcluir);
-
-            }
-
-
-            //verificar se eh para adicionar um novo item. 
-
-            var idsAdd = new List<int>();
-
-            idsAdd = comandaPutDTO.ComandaItems.Where(c => c.Excluir == false)
-                                                        .Select(c => c.CardapioItemId).ToList();
-
-            if (idsAdd.Any())
-            {
-
-                List<ComandaItem> comandaItens = idsAdd.Select(c =>
-                                                                new ComandaItem
-                                                                {
-                                                                    Comanda = comanda,
-                                                                    CardapioItemId = c
-                                                                }).ToList();
-
-                _banco.ComandaItems.AddRange(comandaItens);
-
-                foreach (ComandaItem comandaItem in comandaItens)
-                {
-
-                    var cardapioItem = await _banco.CardapioItems.FirstOrDefaultAsync(c => c.Id == comandaItem.CardapioItemId);
-
-                    if (cardapioItem!.PossuiPreparo)
-                    {
-
-                        var pedidoCozinha = new PedidoCozinha
-                        {
-                            Comanda = comanda,
-                            SituacaoId = (int)SituacaoPedidoCozinha.Pendente
-                        };
-
-                        await _banco.PedidosCozinha.AddAsync(pedidoCozinha);
-
-                        var pedidoCozinhaItem = new PedidoCozinhaItem
-                        {
-                            PedidoCozinha = pedidoCozinha,
-                            ComandaItem = comandaItem
-                        };
-
-                        await _banco.PedidoCozinhaItems.AddAsync(pedidoCozinhaItem);
-                    }
-                }
-            }
-
-            //fazer a persistencia dos dados.
-
-            try
-            {
-
-                await _banco.SaveChangesAsync();
-
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, "Erro interno no servidor.");
-
-                return StatusCode(500, "Ouve um erro interno no sistema.");
-
-            }
-
+ 
             return NoContent();
         }
 

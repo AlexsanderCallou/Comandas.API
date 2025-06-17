@@ -15,19 +15,19 @@ public class MesaService : IMesaService
 
     public async Task<MesaGetDTO?> GetMesa(int Id)
     {
-        return await _mesaRepository.GetMesa(Id);
+        return await _mesaRepository.ReturnMesa(Id);
     }
 
     public async Task<IEnumerable<MesaGetDTO>> GetMesas()
     {
-        return await _mesaRepository.GetMesas();
+        return await _mesaRepository.ReturnMesas();
     }
 
     public async Task<MesaResponsePostDTO> PostMesa(MesaPostDTO mesaPostDTO)
     {
         try
         {
-            return await _mesaRepository.PostMesa(mesaPostDTO);
+            return await _mesaRepository.CreateMesa(mesaPostDTO);
         }
         catch (Exception ex)
         {
@@ -39,7 +39,7 @@ public class MesaService : IMesaService
     {
         try
         {
-            return await _mesaRepository.PutMesa(mesaPutDTO);
+            return await _mesaRepository.AtualizaMesa(mesaPutDTO);
         }
         catch (Exception ex)
         {
@@ -60,11 +60,11 @@ public class MesaService : IMesaService
 
     public Task<bool> MesaDesocupada(int id)
     {
-        return _mesaRepository.MesaDesocupada(id);
+        return _mesaRepository.ReturnMesaDesocupada(id);
     }
 
     public Task<bool> MesaExiste(int id)
     {
-        return _mesaRepository.MesaExiste(id);
+        return _mesaRepository.ReturnMesaExiste(id);
     }
 }

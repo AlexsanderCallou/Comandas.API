@@ -15,7 +15,7 @@ namespace Comandas.Data.Implementation
             _banco = comandasDBContext;
         }
 
-        public async Task<CardapioItemGetDTO?> GetCardapioItem(int Id)
+        public async Task<CardapioItemGetDTO?> ReturnCardapioItemDTO(int Id)
         {
             var response = await _banco.CardapioItems
                                         .Where(c => c.Id == Id)
@@ -39,7 +39,7 @@ namespace Comandas.Data.Implementation
 
         }
 
-        public async Task<IEnumerable<CardapioItemGetDTO>> GetCardapioItens()
+        public async Task<IEnumerable<CardapioItemGetDTO>> ReturnCardapioItens()
         {
             return await _banco.CardapioItems
                                 .AsNoTracking()
@@ -55,7 +55,7 @@ namespace Comandas.Data.Implementation
                                 .ToListAsync();
         }
 
-        public async Task<CardapioItemResponsePostDTO> PostCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
+        public async Task<CardapioItemResponsePostDTO> CreateCardapioItem(CardapioItemPostDTO cardapioItemPostDTO)
         {
             var cardapioItem = new CardapioItem
             {
@@ -79,7 +79,7 @@ namespace Comandas.Data.Implementation
             };
         }
 
-        public async Task<bool> PutCardapioItem(CardapioItemPutDTO cardapioItemPutDTO)
+        public async Task<bool> AtualizaCardapioItem(CardapioItemPutDTO cardapioItemPutDTO)
         {
             var cardapioItem = await _banco.CardapioItems
                                             .Where(c => c.Id == cardapioItemPutDTO.Id)
@@ -111,17 +111,12 @@ namespace Comandas.Data.Implementation
             await _banco.CardapioItems.AddRangeAsync(cardapioItems);
         }
 
-        public async Task<CardapioItem?> ReturnCardapioItem(int Id)
+        public async Task<CardapioItem> ReturnCardapioItem(int Id)
         {
             var response = await _banco.CardapioItems
                                         .Where(c => c.Id == Id)
                                         .TagWith("GetCardapioItem")
-                                        .FirstOrDefaultAsync();
-
-            if (response is null)
-            {
-                return default;
-            }
+                                        .FirstAsync();
             return response;
         }
     }

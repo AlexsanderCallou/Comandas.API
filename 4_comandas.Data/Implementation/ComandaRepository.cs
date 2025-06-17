@@ -18,7 +18,7 @@ namespace Comandas.Data.Implementation
             _comandasDBContext = comandasDBContext;
         }
 
-        public async Task<ComandaGetDTO?> GetComanda(int id)
+        public async Task<ComandaGetDTO?> ReturnComandaDTO(int id)
         {
             return await _comandasDBContext.Comandas
                                         .Include(c => c.ComandaItems)
@@ -39,7 +39,7 @@ namespace Comandas.Data.Implementation
                                         }).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ComandaGetDTO?>> GetComandas(int idSituacaoComanda)
+        public async Task<IEnumerable<ComandaGetDTO?>> ReturnListComandasDTO(int idSituacaoComanda)
         {
             return await _comandasDBContext.Comandas
                             .Include(c => c.ComandaItems)
@@ -60,29 +60,18 @@ namespace Comandas.Data.Implementation
                             }).ToListAsync();
         }
 
-        public async Task<bool> PostComanda(Comanda comanda)
+        public async Task<bool> CreateComanda(Comanda comanda)
         {
             await _comandasDBContext.Comandas.AddAsync(comanda);
 
             return true;
         }
-
-        public Task<bool> PutComanda(ComandaPutDTO comandaPutDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> PatchComanda(ComandaPatchDTO comandaPatchDTO)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<bool> DeleteComanda(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> GetExisteComanda(int id)
+        public async Task<bool> ExisteComanda(int id)
         {
             return await _comandasDBContext.Comandas
                                         .Include(c => c.ComandaItems)
@@ -97,6 +86,11 @@ namespace Comandas.Data.Implementation
         public async Task SaveChangesAsync()
         {
             await _comandasDBContext.SaveChangesAsync();
+        }
+
+        public async Task<Comanda> ReturnComanda(int id)
+        {
+            return await _comandasDBContext.Comandas.Where(c => c.Id == id).FirstAsync();
         }
     }
 }

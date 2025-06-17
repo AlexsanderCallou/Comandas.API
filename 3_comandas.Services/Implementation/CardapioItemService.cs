@@ -36,7 +36,7 @@ namespace Comandas.Services.Implementation
 
             if (cardapioCache is null)
             {
-                var response = await _cardapioItemRepository.GetCardapioItem(Id);
+                var response = await _cardapioItemRepository.ReturnCardapioItemDTO(Id);
 
                 await _redisRepository.SaveAsync<CardapioItemGetDTO>(chave, response!, TimeSpan.FromMinutes(1));
 
@@ -59,7 +59,7 @@ namespace Comandas.Services.Implementation
                 return cardaiosCache;
             }
 
-            var response = await _cardapioItemRepository.GetCardapioItens();
+            var response = await _cardapioItemRepository.ReturnCardapioItens();
 
             await _redisRepository.SaveAsync<IEnumerable<CardapioItemGetDTO>>(chave, response, TimeSpan.FromMinutes(1));
 
@@ -71,7 +71,7 @@ namespace Comandas.Services.Implementation
         {
             try
             {
-                var response = await _cardapioItemRepository.PostCardapioItem(cardapioItemPostDTO);
+                var response = await _cardapioItemRepository.CreateCardapioItem(cardapioItemPostDTO);
 
                 await InvalidarCacheCardapioItems();
 
@@ -89,7 +89,7 @@ namespace Comandas.Services.Implementation
         {
             try
             {
-                bool response = await _cardapioItemRepository.PutCardapioItem(cardapioItemPutDTO);
+                bool response = await _cardapioItemRepository.AtualizaCardapioItem(cardapioItemPutDTO);
 
                 await InvalidarCacheCardapioItemById(cardapioItemPutDTO.Id);
 
