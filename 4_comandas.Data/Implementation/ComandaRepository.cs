@@ -66,9 +66,10 @@ namespace Comandas.Data.Implementation
 
             return true;
         }
-        public Task<bool> DeleteComanda(int Id)
-        {
-            throw new NotImplementedException();
+        public void DeleteComanda(Comanda comanda)
+        { 
+            _comandasDBContext.Comandas.Remove(comanda);
+           
         }
 
         public async Task<bool> ExisteComanda(int id)

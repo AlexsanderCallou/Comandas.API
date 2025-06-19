@@ -20,11 +20,14 @@ namespace Comandas.API.Configuration
 
             serviceCollection.AddScoped<IPedidoCozinhaService, PedidoCozinhaService>();
             serviceCollection.AddScoped<IPedidoCozinhaRepository, PedidoCozinhaRepository>();
+            
+            serviceCollection.AddScoped<IPedidoCozinhaItemRepository, PedidoCozinhaItemRepository>();
 
             serviceCollection.AddScoped<IComandaItemRepository, ComandaItemRepository>();
 
             serviceCollection.AddScoped<IComandaService, ComandaService>();
             serviceCollection.AddScoped<IComandaRepository, ComandaRepository>();
+            
 
             serviceCollection.AddScoped<IRedisRepository, RedisRepository>();
 

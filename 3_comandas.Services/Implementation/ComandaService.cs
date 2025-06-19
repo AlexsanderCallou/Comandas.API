@@ -16,6 +16,7 @@ namespace Comandas.Services.Implementation
         private readonly ICardapioItemRepository _cardapioItemRepository;
         private readonly IComandaItemRepository _comandaItemRepository;
         private readonly IPedidoCozinhaRepository _pedidoCozinhaRepository;
+        private readonly IPedidoCozinhaItemRepository _pedidoCozinhaItemRepository;
         private readonly ILogger<ComandaService> _logger;
         public ComandaService(IComandaRepository comandaRepository,
                                 IMesaRepository mesaRepository,
@@ -23,6 +24,7 @@ namespace Comandas.Services.Implementation
                                 IComandaItemRepository comandaItemRepository,
                                 ICardapioItemRepository cardapioItemRepository,
                                 IPedidoCozinhaRepository pedidoCozinhaRepository,
+                                IPedidoCozinhaItemRepository pedidoCozinhaItemRepository,
                                 ILogger<ComandaService> logger)
         {
             _comandaRepository = comandaRepository;
@@ -31,6 +33,7 @@ namespace Comandas.Services.Implementation
             _comandaItemRepository = comandaItemRepository;
             _cardapioItemRepository = cardapioItemRepository;
             _pedidoCozinhaRepository = pedidoCozinhaRepository;
+            _pedidoCozinhaItemRepository = pedidoCozinhaItemRepository;
             _logger = logger;
         }
         public Task<bool> GetExisteComanda(int id)
@@ -47,17 +50,20 @@ namespace Comandas.Services.Implementation
         }
         public async Task<ServiceResponseDTO<ComandaResponsePostDTO>> PostComanda(ComandaPostDTO comandaPostDTO)
         {
-
+            var mesa = await _mesaRepository.ReturnMesaByNumMesa(comandaPostDTO.NumeroMesa);
+            
             if (!await _mesaRepository.ReturnMesaExiste(comandaPostDTO.NumeroMesa))
             {
                 return ServiceResponseDTO<ComandaResponsePostDTO>.Fail("Mesa não existe.");
             }
 
-            if (!await _mesaRepository.ReturnMesaDesocupada(comandaPostDTO.NumeroMesa))
+            if (!await _mesaRepository.ReturnMesaDisponivel(comandaPostDTO.NumeroMesa))
             {
                 return ServiceResponseDTO<ComandaResponsePostDTO>.Fail("Mesa ocupada.");
             }
-
+            
+            mesa.SituacaoMesa = (int)SituacaoMesa.Ocupada;
+            
             foreach (int item in comandaPostDTO.CardapioItens)
             {
                 if (await _cardapioItemService.GetCardapioItem(item) is null)
@@ -79,11 +85,31 @@ namespace Comandas.Services.Implementation
 
             foreach (int cItem in comandaPostDTO.CardapioItens)
             {
-                itensInsert.Add(new ComandaItem
+                var comandaItemInsert = new ComandaItem
                 {
                     Comanda = comandaInsert,
                     CardapioItem = await _cardapioItemRepository.ReturnCardapioItem(cItem)
-                });
+                }; 
+                
+                itensInsert.Add(comandaItemInsert);
+                
+                var cardapioItem = await _cardapioItemRepository.ReturnCardapioItem(cItem);
+                if (cardapioItem.PossuiPreparo)
+                {
+                    var pedidoCozinhaInsert = new PedidoCozinha
+                    {
+                        Comanda = comandaInsert,
+                        SituacaoId = (int)SituacaoPedidoCozinha.Pendente
+
+                    };
+                    var pedidoCozinhaItemInsert = new PedidoCozinhaItem
+                    {
+                        PedidoCozinha = pedidoCozinhaInsert,
+                        ComandaItem = comandaItemInsert
+                    };
+                    _pedidoCozinhaRepository.CreatePedidoCozinha(pedidoCozinhaInsert);
+                    _pedidoCozinhaItemRepository.CreatePedidoCozinhaItem(pedidoCozinhaItemInsert);
+                }
             }
 
             await _comandaItemRepository.AdicionaComandasItems(itensInsert);
@@ -111,6 +137,7 @@ namespace Comandas.Services.Implementation
         {
 
             List<ErroResult> errosList = [];
+            
             var comanda = await _comandaRepository.ReturnComanda(comandaPutDTO.Id);
 
             if (comanda is null)
@@ -174,10 +201,7 @@ namespace Comandas.Services.Implementation
                 }
                 _comandaItemRepository.DeleteComandaItens(comandaItensExcluir.ToArray());
             }
-
-
             //verificar se eh para adicionar um novo item. 
-
             var idsAdd = new List<int>();
 
             idsAdd = comandaPutDTO.ComandaItems.Where(c => c.Excluir == false)
@@ -229,8 +253,6 @@ namespace Comandas.Services.Implementation
                 }
             }
 
-            //fazer a persistencia dos dados.
-
             try
             {
 
@@ -248,9 +270,42 @@ namespace Comandas.Services.Implementation
 
         }
 
-        public Task<ServiceResponseDTO<bool>> DeleteComanda(int id)
+        public async Task<ServiceResponseDTO<bool>> DeleteComanda(int id)
         {
-            throw new NotImplementedException();
+            List<ErroResult> errosList = [];
+            
+            if (!await _comandaRepository.ExisteComanda(id))
+            {
+                errosList.Add(new ErroResult(404, $"Comanda não encontrada: {id}"));
+            }
+
+            var comandaItems = await _comandaItemRepository.ReturnComandaItensInComanda(id);
+            
+            var comandaItemsPreparo = comandaItems.Where(c => c.CardapioItem.PossuiPreparo).ToList();
+
+            foreach (var item in comandaItemsPreparo)
+            {
+
+                var pedidoCozinhaItem = await _pedidoCozinhaItemRepository.ReturnPedidoCozinhaItensByComandaItemId(item.Id);
+
+                if (pedidoCozinhaItem is not null)
+                {
+                    _pedidoCozinhaItemRepository.DeletePedidoCozinhaItem(pedidoCozinhaItem);
+                    _pedidoCozinhaRepository.DeletaPedidoCozinha(pedidoCozinhaItem.PedidoCozinha);
+                }
+
+            }
+
+            if (comandaItems.Any())
+            {
+                _comandaItemRepository.DeleteComandaItens(comandaItems.ToArray());
+            }
+
+            _comandaRepository.DeleteComanda(await _comandaRepository.ReturnComanda(id));
+
+            await _comandaRepository.SaveChangesAsync();
+            
+            return ServiceResponseDTO<bool>.Ok(true);
         }
 
         public Task<ServiceResponseDTO<bool>> PatchComanda(ComandaPatchDTO comandaPatchDTO)

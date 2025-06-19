@@ -7,6 +7,7 @@ namespace Comandas.Data.Interface
     {
         Task AdicionaComandasItems(List<ComandaItem> comandaItem);
         Task<IEnumerable<ComandaItem>> ReturnComandaItens(List<int> ids);
+        Task<IEnumerable<ComandaItem>> ReturnComandaItensInComanda(int comandaId);
         void DeleteComandaItens(ComandaItem[] comandaItems);
     }
 }

@@ -15,12 +15,12 @@ namespace Comandas.Services.Implementation
 
         public Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha)
         {
-            return _pedidoCozinhaRepository.GetPedidoCozinha(situacaoPedidoCozinha);
+            return _pedidoCozinhaRepository.ReturnPedidosCozinha(situacaoPedidoCozinha);
         }
 
         public Task<bool> PatchPedidoCozinha(int Id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
         {
-            return _pedidoCozinhaRepository.PatchPedidoCozinha(Id, pedidioCozinhaPatchDTO);
+            return _pedidoCozinhaRepository.AtualizaSituacaoPedidoCozinha(Id, pedidioCozinhaPatchDTO);
         }
     }
 }

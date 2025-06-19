@@ -24,7 +24,7 @@ public class UnitTest1
 
         comandasDBContext = escopo.ServiceProvider.GetRequiredService<ComandasDBContext>();
 
-        comandaController = new ComandaController(comandasDBContext,null);
+        //comandaController = new ComandaController(comandasDBContext,null);
 
         carregarbanco();
 

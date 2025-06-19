@@ -6,5 +6,6 @@ namespace Comandas.Services.Interface
     {
         Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha);
         Task<bool> PatchPedidoCozinha(int Id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO);
+        
     }
 }

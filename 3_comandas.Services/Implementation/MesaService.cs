@@ -60,7 +60,7 @@ public class MesaService : IMesaService
 
     public Task<bool> MesaDesocupada(int id)
     {
-        return _mesaRepository.ReturnMesaDesocupada(id);
+        return _mesaRepository.ReturnMesaDisponivel(id);
     }
 
     public Task<bool> MesaExiste(int id)

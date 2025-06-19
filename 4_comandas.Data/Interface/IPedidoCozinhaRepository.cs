@@ -5,8 +5,10 @@ namespace Comandas.Data.Interface
 {
     public interface IPedidoCozinhaRepository
     {
-        Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha);
-        Task<bool> PatchPedidoCozinha(int Id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO);
+        Task<IEnumerable<PedidoCozinhaGetDTO>> ReturnPedidosCozinha(int situacaoPedidoCozinha);
+        Task<bool> AtualizaSituacaoPedidoCozinha(int Id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO);
         Task CreatePedidoCozinha(PedidoCozinha pedidoCozinha);
+        void DeletaPedidoCozinha(PedidoCozinha pedidoCozinha);
+        
     }
 }

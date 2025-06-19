@@ -11,7 +11,7 @@ namespace Comandas.Data.Interface
         Task<MesaResponsePostDTO> CreateMesa(MesaPostDTO mesaPostDTO);
         Task<bool> AtualizaMesa(MesaPutDTO mesaPutDTO);
         Task<bool> DeleteMesa(int id);
-        Task<bool> ReturnMesaDesocupada(int id);
+        Task<bool> ReturnMesaDisponivel(int numeroMesa);
         Task<bool> ReturnMesaExiste(int id);
         Task<Mesa?> ReturnMesaByNumMesa(int numeroMesa);
     }    

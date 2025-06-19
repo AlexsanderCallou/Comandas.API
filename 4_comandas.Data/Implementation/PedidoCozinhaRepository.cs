@@ -8,22 +8,27 @@ namespace Comandas.Data.Implementation
     public class PedidoCozinhaRepository : IPedidoCozinhaRepository
     {
 
-        private readonly ComandasDBContext comandasDBContext;
+        private readonly ComandasDBContext _comandasDBContext;
 
         public PedidoCozinhaRepository(ComandasDBContext comandasDBContext)
         {
-            this.comandasDBContext = comandasDBContext;
+            _comandasDBContext = comandasDBContext;
         }
 
         public async Task CreatePedidoCozinha(PedidoCozinha pedidoCozinha)
         {
-            await comandasDBContext.PedidosCozinha.AddAsync(pedidoCozinha);
+            await _comandasDBContext.PedidosCozinha.AddAsync(pedidoCozinha);
         }
 
-        public async Task<IEnumerable<PedidoCozinhaGetDTO>> GetPedidoCozinha(int situacaoPedidoCozinha)
+        public void DeletaPedidoCozinha(PedidoCozinha pedidoCozinha)
+        {
+            _comandasDBContext.PedidosCozinha.Remove(pedidoCozinha);
+        }
+
+        public async Task<IEnumerable<PedidoCozinhaGetDTO>> ReturnPedidosCozinha(int situacaoPedidoCozinha)
         {
 
-            var pedidoCozinha = await comandasDBContext.PedidosCozinha
+            var pedidoCozinha = await _comandasDBContext.PedidosCozinha
                                             .Include(c => c.Comanda)
                                             .Include(c => c.PedidoCozinhaItems)
                                                 .ThenInclude(c => c.ComandaItem)
@@ -41,9 +46,9 @@ namespace Comandas.Data.Implementation
 
         }
 
-        public async Task<bool> PatchPedidoCozinha(int id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
+        public async Task<bool> AtualizaSituacaoPedidoCozinha(int id, PedidioCozinhaPatchDTO pedidioCozinhaPatchDTO)
         {
-            var pedidoCozinha = await comandasDBContext.PedidosCozinha.FirstOrDefaultAsync(c => c.Id == id);
+            var pedidoCozinha = await _comandasDBContext.PedidosCozinha.FirstOrDefaultAsync(c => c.Id == id);
 
             if (pedidoCozinha is null)
             {
@@ -52,7 +57,7 @@ namespace Comandas.Data.Implementation
 
             pedidoCozinha.SituacaoId = pedidioCozinhaPatchDTO.SituacaoPedidoCozinhaId;
 
-            await comandasDBContext.SaveChangesAsync();
+            await _comandasDBContext.SaveChangesAsync();
 
             return true;
 

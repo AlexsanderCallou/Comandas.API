@@ -9,7 +9,7 @@ namespace Comandas.Data.Interface
         Task<ComandaGetDTO?> ReturnComandaDTO(int id);
         Task<IEnumerable<ComandaGetDTO?>> ReturnListComandasDTO(int idSituacaoComanda);
         Task<bool> CreateComanda(Comanda comanda);
-        Task<bool> DeleteComanda(int id);
+        void DeleteComanda(Comanda comanda);
         Task<bool> ExisteComanda(int id);
         Task SaveChangesAsync();
         Task<Comanda> ReturnComanda(int id);

@@ -47,8 +47,8 @@ namespace Comandas.Shared.DTOs
             Message = message;
         }
 
-        private int ErrorCode { get; set; }
-        private string Message { get; set; } = default!;
+        public int ErrorCode { get; private set; }
+        public string Message { get; private set; } = default!;
         
     } 
 }

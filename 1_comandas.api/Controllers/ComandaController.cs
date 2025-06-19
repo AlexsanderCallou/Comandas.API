@@ -24,12 +24,12 @@ namespace Comandas.API.Controllers
         private readonly ILogger<ComandaController> _logger;
         private readonly ComandasDBContext _banco;
 
-        public ComandaController(ComandasDBContext comandasDBContext,
+        public ComandaController(ComandasDBContext comandasDbContext,
                                 ILogger<ComandaController> logger,
                                 IComandaService comandaService,
                                 IMesaService mesaService)
         {
-            _banco = comandasDBContext;
+            _banco = comandasDbContext;
             _logger = logger;
             _comandaService = comandaService;
             _mesaService = mesaService;
@@ -81,10 +81,10 @@ namespace Comandas.API.Controllers
             }
 
             var comanda = await _comandaService.PutComanda(comandaPutDTO);
-            //TODO falta ver a questao do retorno code, pois temos uma lista agora. 
-            if (!comanda.Success) 
+
+            if (!comanda.Success)
             {
-                return NotFound("Comanda não encontrada.");
+                return StatusCode(comanda.Errors.First().ErrorCode, new { comanda.Errors.First().Message });
             }
  
             return NoContent();
@@ -93,45 +93,14 @@ namespace Comandas.API.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteComanda(int id)
         {
-
-            var comanda = await _banco.Comandas.FindAsync(id);
-
-            if (comanda is null)
+            var response = await _comandaService.DeleteComanda(id);
+            
+            if (!response.Success)
             {
-                NotFound($"Comanda não encontrada {id}");
+                return StatusCode(response.Errors.First().ErrorCode, new { message = response.Errors.First().Message });
             }
-
-            var comandaItems = await _banco.ComandaItems.Include(c => c.CardapioItem).Where(c => c.ComandaId == comanda.Id).ToListAsync();
-
-            var comandaItemsPreparo = comandaItems.Where(c => c.CardapioItem.PossuiPreparo).ToList();
-
-            foreach (var item in comandaItemsPreparo)
-            {
-
-                var pedidoCozinhaItem = await _banco.PedidoCozinhaItems.Include(c => c.PedidoCozinha).Where(c => c.ComanadaItemId == item.Id).FirstAsync();
-
-                if (pedidoCozinhaItem is not null)
-                {
-                    _banco.PedidoCozinhaItems.Remove(pedidoCozinhaItem);
-                    _banco.PedidosCozinha.Remove(pedidoCozinhaItem.PedidoCozinha);
-                }
-
-            }
-
-            if (comandaItems.Any())
-            {
-
-                _banco.ComandaItems.RemoveRange(comandaItems);
-            }
-
-            _banco.Comandas.Remove(comanda);
-
-            await _banco.SaveChangesAsync();
-
             return NoContent();
-
         }
-
 
         [HttpPatch("{id}")]
         public async Task<ActionResult> PatchComanda(int id, [FromBody] ComandaPatchDTO comandaPatchDTO)
