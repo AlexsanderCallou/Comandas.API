@@ -12,6 +12,6 @@ namespace Comandas.Data.Interface
         void DeleteComanda(Comanda comanda);
         Task<bool> ExisteComanda(int id);
         Task SaveChangesAsync();
-        Task<Comanda> ReturnComanda(int id);
+        Task<Comanda?> ReturnComanda(int id);
     }
 }

@@ -312,9 +312,8 @@ namespace Comandas.Services.Implementation
         {
             List<ErroResult> erroList = [];
 
-            Comanda comanda = await _comandaRepository.ReturnComanda(id);
+            Comanda? comanda = await _comandaRepository.ReturnComanda(id);
             
-            // TODO: VER ISSO COM O PREFESSOR, POR QUE SEMPRE RETORNA QUE SERA FALSE
             if (comanda is null)
             {
                 erroList.Add(new ErroResult(400, "Mesa não encontrada."));

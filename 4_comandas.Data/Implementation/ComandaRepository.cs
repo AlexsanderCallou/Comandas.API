@@ -89,7 +89,7 @@ namespace Comandas.Data.Implementation
             await _comandasDBContext.SaveChangesAsync();
         }
 
-        public async Task<Comanda> ReturnComanda(int id)
+        public async Task<Comanda?> ReturnComanda(int id)
         {
             return await _comandasDBContext.Comandas.Where(c => c.Id == id).FirstAsync();
         }
