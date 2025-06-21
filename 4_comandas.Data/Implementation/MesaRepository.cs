@@ -10,16 +10,16 @@ namespace Comandas.Data.Implementation
     public class MesaRepository : IMesaRepository
     {
 
-        private readonly ComandasDBContext _banco;
+        private readonly ComandasDBContext _comandasDbContext;
 
         public MesaRepository(ComandasDBContext comandasDBContext)
         {
-            _banco = comandasDBContext;
+            _comandasDbContext = comandasDBContext;
         }
 
         public async Task<MesaGetDTO?> ReturnMesa(int Id)
         {
-            var mesa = await _banco.Mesas
+            var mesa = await _comandasDbContext.Mesas
                                 .Where(m => m.Id == Id)
                                 .Select(m => new MesaGetDTO
                                 {
@@ -38,7 +38,7 @@ namespace Comandas.Data.Implementation
 
         public async Task<IEnumerable<MesaGetDTO>> ReturnMesas()
         {
-            return await _banco.Mesas
+            return await _comandasDbContext.Mesas
                                 .AsNoTracking()
                                 .Select(u => new MesaGetDTO
                                 {
@@ -58,9 +58,9 @@ namespace Comandas.Data.Implementation
                 SituacaoMesa = mesaPostDTO.SituacaoMesa
             };
 
-            await _banco.Mesas.AddAsync(mesa);
-
-            await _banco.SaveChangesAsync();
+            await _comandasDbContext.Mesas.AddAsync(mesa);
+            
+            await _comandasDbContext.SaveChangesAsync();
 
             return new MesaResponsePostDTO
             {
@@ -72,7 +72,7 @@ namespace Comandas.Data.Implementation
 
         public async Task<bool> AtualizaMesa(MesaPutDTO mesaPutDTO)
         {
-            var mesa = await _banco.Mesas
+            var mesa = await _comandasDbContext.Mesas
                                     .Where(m => m.Id == mesaPutDTO.Id)
                                     .ExecuteUpdateAsync(m => m
                                     .SetProperty(m => m.NumeroMesa, mesaPutDTO.NumeroMesa)
@@ -87,7 +87,7 @@ namespace Comandas.Data.Implementation
         public async Task<bool> DeleteMesa(int Id)
         {
 
-            if (await _banco.Mesas.Where(m => m.Id == Id).ExecuteDeleteAsync() > 0)
+            if (await _comandasDbContext.Mesas.Where(m => m.Id == Id).ExecuteDeleteAsync() > 0)
             {
                 return true;
             }
@@ -96,7 +96,7 @@ namespace Comandas.Data.Implementation
 
         public async Task<bool> ReturnMesaDisponivel(int numeroMesa)
         {
-            return await _banco.Mesas
+            return await _comandasDbContext.Mesas
                             .Where(m => m.SituacaoMesa == (int)SituacaoMesa.Disponivel 
                                         && m.NumeroMesa == numeroMesa)
                             .AnyAsync();
@@ -104,14 +104,14 @@ namespace Comandas.Data.Implementation
 
         public async Task<bool> ReturnMesaExiste(int id)
         {
-            return await _banco.Mesas
+            return await _comandasDbContext.Mesas
                 .Where(m => m.Id == id)
                 .AnyAsync();
         }
 
         public async Task<Mesa?> ReturnMesaByNumMesa(int numeroMesa)
         {
-            return await _banco.Mesas
+            return await _comandasDbContext.Mesas
                                 .Where(m => m.NumeroMesa == numeroMesa)
                                 .FirstOrDefaultAsync();
         }

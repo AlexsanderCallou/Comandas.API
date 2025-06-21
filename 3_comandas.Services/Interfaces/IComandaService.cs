@@ -1,3 +1,4 @@
+using Comandas.Domain;
 using Comandas.Shared.DTOs;
 
 namespace Comandas.Services.Interface
@@ -9,7 +10,7 @@ namespace Comandas.Services.Interface
         Task<ServiceResponseDTO<ComandaResponsePostDTO>> PostComanda(ComandaPostDTO comandaPostDTO);
         Task<ServiceResponseDTO<bool>> PutComanda(ComandaPutDTO comandaPutDTO);
         Task<ServiceResponseDTO<bool>> DeleteComanda(int id);
-        Task<ServiceResponseDTO<bool>> PatchComanda(ComandaPatchDTO comandaPatchDTO);
+        Task<ServiceResponseDTO<bool>> PatchComanda(int id, ComandaPatchDTO comandaPatchDTO);
         Task<bool> GetExisteComanda(int id);
     }
 }

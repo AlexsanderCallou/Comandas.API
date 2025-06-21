@@ -84,7 +84,7 @@ namespace Comandas.API.Controllers
 
             if (!comanda.Success)
             {
-                return StatusCode(comanda.Errors.First().ErrorCode, new { comanda.Errors.First().Message });
+                return StatusCode(comanda!.Errors!.First().ErrorCode, new { comanda!.Errors!.First().Message });
             }
  
             return NoContent();
@@ -97,39 +97,26 @@ namespace Comandas.API.Controllers
             
             if (!response.Success)
             {
-                return StatusCode(response.Errors.First().ErrorCode, new { message = response.Errors.First().Message });
+                return StatusCode(response!.Errors!.First().ErrorCode, new { message = response!.Errors!.First().Message });
             }
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> PatchComanda(int id, [FromBody] ComandaPatchDTO comandaPatchDTO)
+        public async Task<ActionResult> PatchComanda(int id, [FromBody] ComandaPatchDTO comandaPatchDto)
         {
-
-            var comanda = await _banco.Comandas.FindAsync(id);
-
-            if (comanda is null)
+            /*if (comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Aberto)
             {
-                return BadRequest("Comanda não encontrada.");
-            }
+                return BadRequest("Serviço apenas para encerrar comanda.");
+            }*/
+            
+            var response = await _comandaService.PatchComanda(id, comandaPatchDto);
 
-            comanda.SituacaoComanda = comandaPatchDTO.SituacaoComanda;
-
-            if (comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Fechado)
+            if (!response.Success)
             {
-
-                var mesa = await _banco.Mesas.Where(c => c.NumeroMesa == comanda.NumeroMesa).FirstOrDefaultAsync();
-
-                if (mesa is null)
-                {
-                    return BadRequest("Mesa não encontrada");
-                }
-
-                mesa.SituacaoMesa = (int)SituacaoMesa.Disponivel;
-
+                return StatusCode(response!.Errors!.First().ErrorCode, new { message = response!.Errors!.First().Message });
             }
-            await _banco.SaveChangesAsync();
-
+            
             return NoContent();
 
         }

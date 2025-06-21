@@ -308,10 +308,49 @@ namespace Comandas.Services.Implementation
             return ServiceResponseDTO<bool>.Ok(true);
         }
 
-        public Task<ServiceResponseDTO<bool>> PatchComanda(ComandaPatchDTO comandaPatchDTO)
+        public async Task<ServiceResponseDTO<bool>> PatchComanda(int id, ComandaPatchDTO comandaPatchDTO)
         {
-            throw new NotImplementedException();
-        }
+            List<ErroResult> erroList = [];
 
+            Comanda comanda = await _comandaRepository.ReturnComanda(id);
+            
+            // TODO: VER ISSO COM O PREFESSOR, POR QUE SEMPRE RETORNA QUE SERA FALSE
+            if (comanda is null)
+            {
+                erroList.Add(new ErroResult(400, "Mesa não encontrada."));
+            }
+
+            Mesa? mesa = await _mesaRepository.ReturnMesaByNumMesa(comanda.NumeroMesa);
+            
+            if (mesa is null)
+            {
+                erroList.Add(new ErroResult(400, "Mesa não encontrada."));
+            }
+
+            if (mesa!.SituacaoMesa == (int)SituacaoMesa.Ocupada &&
+                comanda.SituacaoComanda == (int)SituacaoComanda.Fechado &&
+                comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Aberto)
+            {
+                erroList.Add(new ErroResult(400,"Não é possivel reabrir a comanda, a mesa foi ocupada."));
+            }
+
+            if (comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Fechado)
+            {
+                mesa.SituacaoMesa = (int)SituacaoMesa.Disponivel;
+            }
+            if (comandaPatchDTO.SituacaoComanda == (int)SituacaoComanda.Aberto)
+            {
+                mesa.SituacaoMesa = (int)SituacaoMesa.Ocupada;
+            } 
+            
+            comanda.SituacaoComanda = comandaPatchDTO.SituacaoComanda;
+            
+            await _comandaRepository.SaveChangesAsync();
+
+            return ServiceResponseDTO<bool>.Ok(!erroList.Any());
+
+        }
+            
     }
+
 }
