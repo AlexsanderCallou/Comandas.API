@@ -1,9 +1,8 @@
 services:
   comandas.api:
-    image: ${DOCKER_REGISTRY-}comandasapi
     build:
       context: .
-      dockerfile: comandas.api/Dockerfile
+      dockerfile: 1_comandas.api/Dockerfile
     networks:
       - comandas
   postgres: 

@@ -12,11 +12,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["comandas.api/comandas.api.csproj", "comandas.api/"]
-COPY ["comandas.Domain/comandas.Domain.csproj", "comandas.Domain/"]
-COPY ["comandas.Shared/comandas.Shared.csproj", "comandas.Shared/"]
-COPY ["comandas.Services/comandas.Services.csproj", "comandas.Services/"]
-COPY ["comandas.Data/comandas.Data.csproj", "comandas.Data/"]
+COPY ["1_comandas.api/comandas.api.csproj", "comandas.api/"]
+COPY ["2_comandas.Domain/comandas.Domain.csproj", "comandas.Domain/"]
+COPY ["3_comandas.Services/comandas.Services.csproj", "comandas.Services/"]
+COPY ["4_comandas.Data/comandas.Data.csproj", "comandas.Data/"]
+COPY ["5_comandas.Shared/comandas.Shared.csproj", "comandas.Shared/"]
 RUN dotnet restore "./comandas.api/comandas.api.csproj"
 COPY . .
 WORKDIR "/src/comandas.api"

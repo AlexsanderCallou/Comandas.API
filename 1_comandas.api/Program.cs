@@ -28,6 +28,8 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
 builder.Services.RegisterServiceRegistration();
 
 
+
+
 builder.Services.AddAuthentication(c => {
     c.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     c.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
