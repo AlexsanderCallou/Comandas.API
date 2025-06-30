@@ -111,16 +111,15 @@ namespace Comandas.API.DataBase {
 
             if (!banco.Usuarios.Where(u => u.Nome == "login").Select(u => u.Id).Any())
             {
-            var usuarioLogin = new Usuario
-            {
-                Nome = "login",
-                Email = "string",
-                Senha = "string"
-            };
-            banco.Usuarios.Add(usuarioLogin);
-            
-            banco.SaveChanges();
+                var usuarioLogin = new Usuario
+                {
+                    Nome = "login",
+                    Email = "string",
+                    Senha = "string"
+                };
+                banco.Usuarios.Add(usuarioLogin);
                 
+                banco.SaveChanges();
             }
 
         }

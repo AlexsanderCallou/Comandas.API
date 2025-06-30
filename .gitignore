@@ -6,6 +6,9 @@
 ##Personalizados
 
 1_comandas.api/appsettings.Development.json
+
+*/appsettings.Development.json
+
 .env
 *tmux*
 ##

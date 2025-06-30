@@ -13,6 +13,7 @@
   </PropertyGroup>
 
 <ItemGroup>
+  <PackageReference Include="DotPulsar" Version="4.3.0" />
   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
 </ItemGroup>
   

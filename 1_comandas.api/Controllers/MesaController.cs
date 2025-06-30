@@ -4,7 +4,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Comandas.Services.Interface;
 
-//TODO Colocar Cache
 
 namespace Comandas.API.Controllers
 {

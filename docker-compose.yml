@@ -37,6 +37,15 @@ services:
       - comandas
     depends_on:
       - redis
+  pulsar:
+    image: apachepulsar/pulsar:latest
+    command: >
+      bin/pulsar standalone
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    networks:
+      - comandas
 networks:
   comandas:
 volumes:  
