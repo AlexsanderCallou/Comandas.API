@@ -12,14 +12,14 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["1_comandas.api/comandas.api.csproj", "comandas.api/"]
-COPY ["2_comandas.Domain/comandas.Domain.csproj", "comandas.Domain/"]
-COPY ["3_comandas.Services/comandas.Services.csproj", "comandas.Services/"]
-COPY ["4_comandas.Data/comandas.Data.csproj", "comandas.Data/"]
-COPY ["5_comandas.Shared/comandas.Shared.csproj", "comandas.Shared/"]
-RUN dotnet restore "./comandas.api/comandas.api.csproj"
+COPY ["1_comandas.api/comandas.api.csproj", "1_comandas.api/"]
+COPY ["2_comandas.Domain/comandas.Domain.csproj", "2_comandas.Domain/"]
+COPY ["3_comandas.Services/comandas.Services.csproj", "3_comandas.Services/"]
+COPY ["4_comandas.Data/comandas.Data.csproj", "4_comandas.Data/"]
+COPY ["5_comandas.Shared/comandas.Shared.csproj", "5_comandas.Shared/"]
+RUN dotnet restore "./1_comandas.api/comandas.api.csproj"
 COPY . .
-WORKDIR "/src/comandas.api"
+WORKDIR "/src/1_comandas.api"
 RUN dotnet build "./comandas.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

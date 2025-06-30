@@ -5,7 +5,9 @@ services:
       context: .
       dockerfile: 1_comandas.api/Dockerfile
     networks:
-      - comandas
+      - comandas 
+    depends_on:
+      - postgres
   postgres: 
     image: postgres:16.6
     restart: always

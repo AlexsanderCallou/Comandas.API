@@ -12,11 +12,12 @@ using Comandas.API.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 //conexao com o redis
-var connRedis = ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false");
+var connRedis = ConnectionMultiplexer.Connect("redis:6379,abortConnect=false");
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(connRedis);
 
 //Obeter a connection string do banco
+
 var connection = builder.Configuration.GetConnectionString("Docker");
 
 //Adicionar o contexto do banco de dados a piperline do app
