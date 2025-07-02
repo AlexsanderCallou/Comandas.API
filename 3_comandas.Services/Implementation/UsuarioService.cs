@@ -8,6 +8,9 @@ using Comandas.Shared.DTOs;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using DotPulsar.Abstractions;
+using comandas.Services.Interfaces;
+using comandas.Shared.Event;
 
 namespace Comandas.Services.Implementation;
 
@@ -16,10 +19,13 @@ public class UsuarioService : IUsuarioService
 
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly IConfiguration _configuration;
-    public UsuarioService(IUsuarioRepository usuarioRepository, IConfiguration configuration)
+    private readonly IPulsarProducerService _pusarProducerService;
+    
+    public UsuarioService(IUsuarioRepository usuarioRepository, IConfiguration configuration, IPulsarProducerService pulsarProducerService)
     {
         _usuarioRepository = usuarioRepository;
         _configuration = configuration;
+        _pusarProducerService = pulsarProducerService;
     }
 
     public async Task<UsuarioGetDTO?> GetUsuario(int id)
@@ -94,6 +100,14 @@ public class UsuarioService : IUsuarioService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         var tokenString = tokenHandler.WriteToken(token);
+
+        await _pusarProducerService.EnviarMenssagem(new EmailEvent
+        {
+            assunto = "Bem Vindo!",
+            email = usuario.Email,
+            menssagem = "Voce realizou login",
+            nome = usuario.Nome
+        });
 
         return new UsuarioLoginServiceDTO
         {

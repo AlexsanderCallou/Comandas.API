@@ -1,0 +1,53 @@
+services:
+  comandas.api:
+    #image: ${DOCKER_REGISTRY-}comandasapi
+    build:
+      context: .
+      dockerfile: 1_comandas.api/Dockerfile
+    networks:
+      - comandas 
+    depends_on:
+      - postgres
+  postgres: 
+    image: postgres:16.6
+    restart: always
+    environment: 
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - comandasdb_data:/var/lib/postgresql/data 
+    ports:
+      - "5432:5432" 
+    networks: 
+      - comandas
+  redis:
+    image: redis:latest
+    ports: 
+      - "6379:6379"
+    networks:
+      - comandas
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - comandas
+    depends_on:
+      - redis
+  pulsar:
+    image: apachepulsar/pulsar:latest
+    command: >
+      bin/pulsar standalone
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    networks:
+      - comandas
+networks:
+  comandas:
+volumes:  
+  comandasdb_data:
+

@@ -2,6 +2,8 @@ using Comandas.Services.Implementation;
 using Comandas.Services.Interface;
 using Comandas.Data.Implementation;
 using Comandas.Data.Interface;
+using comandas.Services.Interfaces;
+using comandas.Services.Implementation;
 
 namespace Comandas.API.Configuration
 {
@@ -30,6 +32,10 @@ namespace Comandas.API.Configuration
             
 
             serviceCollection.AddScoped<IRedisRepository, RedisRepository>();
+
+            serviceCollection.AddScoped<IPulsarProducerService, PulsarProducerService>();
+            serviceCollection.AddHostedService<PulsarConsumerService>();
+
 
             return serviceCollection;
         }

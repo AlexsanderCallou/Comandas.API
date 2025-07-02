@@ -13,7 +13,7 @@ public class PulsarProducerService : IPulsarProducerService, IAsyncDisposable
 
     private readonly IProducer<string> _producer;
     private readonly IPulsarClient _pulsarClient;
-    public PulsarProducerService(IProducer<string> producer)
+    public PulsarProducerService()
     {
         _pulsarClient = PulsarClient.Builder().ServiceUrl(new Uri("pulsar://pulsar:6650")).Build();
         _producer = _pulsarClient.NewProducer(Schema.String).Topic("MensagemEmail").Create();
