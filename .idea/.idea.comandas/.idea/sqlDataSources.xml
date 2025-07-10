@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="15ef46e5-99af-410c-ad0d-5d34abcdd407" name="comandas_db@localhost Mapping">
+      <data-sources db="b30dd1cd-eb0e-4048-a5c0-8ebfb5c7bb2a" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
+    </mapping>
+  </component>
+</project>

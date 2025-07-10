@@ -1,11 +1,14 @@
 services:
   comandas.api:
-    #image: ${DOCKER_REGISTRY-}comandasapi
     build:
       context: .
       dockerfile: 1_comandas.api/Dockerfile
+    ports:
+      - "9090:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000  # 👈 Adicione esta linha!
     networks:
-      - comandas 
+      - comandas
     depends_on:
       - postgres
   postgres: 
@@ -43,7 +46,7 @@ services:
       bin/pulsar standalone
     ports:
       - "6650:6650"
-      - "8080:8080"
+      - "8090:8080"
     networks:
       - comandas
 networks:

@@ -107,8 +107,8 @@ namespace Comandas.Services.Implementation
                         PedidoCozinha = pedidoCozinhaInsert,
                         ComandaItem = comandaItemInsert
                     };
-                    _pedidoCozinhaRepository.CreatePedidoCozinha(pedidoCozinhaInsert);
-                    _pedidoCozinhaItemRepository.CreatePedidoCozinhaItem(pedidoCozinhaItemInsert);
+                    await _pedidoCozinhaRepository.CreatePedidoCozinha(pedidoCozinhaInsert);
+                    await _pedidoCozinhaItemRepository.CreatePedidoCozinhaItem(pedidoCozinhaItemInsert);
                 }
             }
 

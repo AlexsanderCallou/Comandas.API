@@ -37,6 +37,8 @@ namespace Comandas.API.Configuration
             serviceCollection.AddHostedService<PulsarConsumerService>();
 
 
+            serviceCollection.AddSingleton<IEmailService, EmailService>();
+
             return serviceCollection;
         }
     }

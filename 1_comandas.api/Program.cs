@@ -11,6 +11,13 @@ using Comandas.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000); // Força só HTTP
+    // Não usar UseHttps aqui
+});
+
 //conexao com o redis
 var connRedis = ConnectionMultiplexer.Connect("redis:6379,abortConnect=false");
 
@@ -27,9 +34,6 @@ builder.Services.AddDbContextPool<ComandasDBContext>(config => {
 });
 
 builder.Services.RegisterServiceRegistration();
-
-
-
 
 builder.Services.AddAuthentication(c => {
     c.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -95,7 +99,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
